@@ -17,8 +17,13 @@ import { AuthService } from './auth.service';
           consumer: {
             groupId: 'auth-consumer',
           },
-          producerOnlyMode: true,
+          // producerOnlyMode: true,
         },
+      },
+      {
+        name: 'API-GATEWAY',
+        transport: Transport.KAFKA,
+        options: {},
       },
     ]),
   ],

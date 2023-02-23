@@ -1,5 +1,5 @@
 import { Controller, ValidationPipe } from '@nestjs/common';
-import { MessagePattern, Payload } from '@nestjs/microservices';
+import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 
@@ -7,8 +7,13 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @MessagePattern('create_user')
+  @EventPattern('create_user')
   createUser(@Payload(ValidationPipe) data: CreateUserDto) {
     return this.userService.createUser(data);
+  }
+
+  @MessagePattern('get_user')
+  getUser() {
+    return this.userService.getUser();
   }
 }

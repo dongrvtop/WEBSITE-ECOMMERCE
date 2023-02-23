@@ -20,6 +20,9 @@ let AuthController = class AuthController {
     createUser() {
         return this.authService.createUser();
     }
+    getUser() {
+        return this.authService.getUser();
+    }
 };
 __decorate([
     (0, common_1.Post)(),
@@ -27,6 +30,12 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "createUser", null);
+__decorate([
+    (0, common_1.Get)('/get-user'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "getUser", null);
 AuthController = __decorate([
     (0, common_1.Controller)('auth'),
     (0, swagger_1.ApiTags)('auth'),

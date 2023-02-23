@@ -1,4 +1,4 @@
-import { Controller, Post } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 
@@ -10,5 +10,10 @@ export class AuthController {
   @Post()
   createUser() {
     return this.authService.createUser();
+  }
+
+  @Get('/get-user')
+  getUser() {
+    return this.authService.getUser();
   }
 }

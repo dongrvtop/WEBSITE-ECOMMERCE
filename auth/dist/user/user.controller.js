@@ -24,14 +24,23 @@ let UserController = class UserController {
     createUser(data) {
         return this.userService.createUser(data);
     }
+    getUser() {
+        return this.userService.getUser();
+    }
 };
 __decorate([
-    (0, microservices_1.MessagePattern)('create_user'),
+    (0, microservices_1.EventPattern)('create_user'),
     __param(0, (0, microservices_1.Payload)(common_1.ValidationPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto]),
     __metadata("design:returntype", void 0)
 ], UserController.prototype, "createUser", null);
+__decorate([
+    (0, microservices_1.MessagePattern)('get_user'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], UserController.prototype, "getUser", null);
 UserController = __decorate([
     (0, common_1.Controller)('user'),
     __metadata("design:paramtypes", [user_service_1.UserService])

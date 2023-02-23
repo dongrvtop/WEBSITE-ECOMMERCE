@@ -14,8 +14,14 @@ const common_1 = require("@nestjs/common");
 let UserService = class UserService {
     constructor() { }
     createUser(data) {
-        console.log(`Create user success with data: ${JSON.stringify(data)}`);
         return `Create user success with data: ${JSON.stringify(data)}`;
+    }
+    getUser() {
+        return {
+            email: 'dongnd@gmail.com',
+            firstName: 'Đồng',
+            lastName: 'Nguyễn Duy',
+        };
     }
 };
 UserService = __decorate([

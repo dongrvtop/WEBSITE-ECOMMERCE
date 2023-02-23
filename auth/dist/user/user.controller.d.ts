@@ -4,4 +4,9 @@ export declare class UserController {
     private readonly userService;
     constructor(userService: UserService);
     createUser(data: CreateUserDto): string;
+    getUser(): {
+        email: string;
+        firstName: string;
+        lastName: string;
+    };
 }

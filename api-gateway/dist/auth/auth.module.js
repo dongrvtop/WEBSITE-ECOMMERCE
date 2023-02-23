@@ -28,8 +28,12 @@ AuthModule = __decorate([
                         consumer: {
                             groupId: 'auth-consumer',
                         },
-                        producerOnlyMode: true,
                     },
+                },
+                {
+                    name: 'API-GATEWAY',
+                    transport: microservices_1.Transport.KAFKA,
+                    options: {},
                 },
             ]),
         ],
