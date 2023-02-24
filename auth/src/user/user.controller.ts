@@ -7,7 +7,7 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @EventPattern('create_user')
+  @MessagePattern('create_user')
   createUser(@Payload(ValidationPipe) data: CreateUserDto) {
     return this.userService.createUser(data);
   }

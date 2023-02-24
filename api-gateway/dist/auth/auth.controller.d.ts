@@ -2,6 +2,6 @@ import { AuthService } from './auth.service';
 export declare class AuthController {
     private readonly authService;
     constructor(authService: AuthService);
-    createUser(): Promise<void>;
+    createUser(): Promise<import("rxjs").Observable<string>>;
     getUser(): Promise<import("rxjs").Observable<any>>;
 }

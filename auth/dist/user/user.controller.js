@@ -29,7 +29,7 @@ let UserController = class UserController {
     }
 };
 __decorate([
-    (0, microservices_1.EventPattern)('create_user'),
+    (0, microservices_1.MessagePattern)('create_user'),
     __param(0, (0, microservices_1.Payload)(common_1.ValidationPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto]),

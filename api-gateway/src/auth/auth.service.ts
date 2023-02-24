@@ -1,5 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
+import { AuthPattern } from './enum/auth-microserivce.pattern';
+
+const AuthPatternList = [AuthPattern.CREATE_USER, AuthPattern.GET_USER];
 
 @Injectable()
 export class AuthService {
@@ -8,9 +11,11 @@ export class AuthService {
     private readonly authClient: ClientKafka,
   ) {}
 
-  onModuleInit() {
-    this.authClient.subscribeToResponseOf('get_user');
-    this.authClient.subscribeToResponseOf('create_user');
+  async onModuleInit() {
+    AuthPatternList.forEach((key) => {
+      this.authClient.subscribeToResponseOf(key);
+    });
+    await this.authClient.connect();
   }
 
   onModuleDestroy() {
@@ -19,7 +24,7 @@ export class AuthService {
 
   async createUser() {
     console.log('---> authClient emit create_user');
-    this.authClient.emit('create_user', {
+    return this.authClient.send<string>('create_user', {
       email: 'dongnd@gmail.com',
       firstName: 'Đồng',
       lastName: 'Nguyễn Duy',
