@@ -1,16 +1,30 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
+import { RoleType } from 'src/constants/role-type';
 
 export class CreateUserDto {
-  @ApiProperty({ example: 'dongnd@gmail.com', nullable: false })
-  @IsEmail()
-  email: string;
+  @ApiProperty({ required: true })
+  @IsString()
+  userName: string;
 
-  @ApiProperty({ example: 'Đồng', nullable: false })
+  @ApiProperty({ required: true, minLength: 8 })
+  @IsString()
+  password: string;
+
+  @ApiProperty({ required: true })
   @IsString()
   firstName: string;
 
-  @ApiProperty({ example: 'Nguyễn Duy', nullable: false })
+  @ApiProperty({ required: true })
   @IsString()
   lastName: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  phoneNumber: string;
+
+  @ApiProperty({ default: RoleType.USER })
+  @IsString()
+  role: string;
 }

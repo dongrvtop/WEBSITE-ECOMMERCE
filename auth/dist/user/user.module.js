@@ -8,14 +8,28 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserModule = void 0;
 const common_1 = require("@nestjs/common");
+const config_1 = require("@nestjs/config");
+const jwt_1 = require("@nestjs/jwt");
+const mongoose_1 = require("@nestjs/mongoose");
+const user_schema_1 = require("./schema/user.schema");
 const user_controller_1 = require("./user.controller");
 const user_service_1 = require("./user.service");
 let UserModule = class UserModule {
 };
 UserModule = __decorate([
     (0, common_1.Module)({
+        imports: [
+            mongoose_1.MongooseModule.forFeature([{ name: 'User', schema: user_schema_1.UserSchema }]),
+            jwt_1.JwtModule.registerAsync({
+                useFactory: (configService) => ({
+                    secret: configService.get('JWT_SECRET'),
+                    signOptions: { expiresIn: configService.get('JWT_EXPIRES_DATE') },
+                }),
+                inject: [config_1.ConfigService],
+            }),
+        ],
         controllers: [user_controller_1.UserController],
-        providers: [user_service_1.UserService]
+        providers: [user_service_1.UserService],
     })
 ], UserModule);
 exports.UserModule = UserModule;

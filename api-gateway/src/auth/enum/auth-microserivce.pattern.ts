@@ -1,4 +1,5 @@
 export enum AuthPattern {
-  CREATE_USER = 'create_user',
+  USER_REGISTER = 'user_register',
+  USER_LOGIN = 'user_login',
   GET_USER = 'get_user',
 }

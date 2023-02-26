@@ -15,7 +15,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
 const common_1 = require("@nestjs/common");
 const microservices_1 = require("@nestjs/microservices");
+const role_type_1 = require("../constants/role-type");
+const token_type_1 = require("../constants/token-type");
 const create_user_dto_1 = require("./dto/create-user.dto");
+const user_login_dto_1 = require("./dto/user-login.dto");
+const user_messages_1 = require("./enum/user-messages");
 const user_service_1 = require("./user.service");
 let UserController = class UserController {
     constructor(userService) {
@@ -24,17 +28,34 @@ let UserController = class UserController {
     createUser(data) {
         return this.userService.createUser(data);
     }
+    async userLogin(data) {
+        var _a;
+        const user = await this.userService.validateUser(data);
+        const token = await this.userService.createAccessToken({
+            userId: user.id,
+            role: (_a = user.role) !== null && _a !== void 0 ? _a : role_type_1.RoleType.USER,
+            type: token_type_1.TokenType.ACCESS_TOKEN,
+        });
+        return { user, token };
+    }
     getUser() {
         return this.userService.getUser();
     }
 };
 __decorate([
-    (0, microservices_1.MessagePattern)('create_user'),
+    (0, microservices_1.MessagePattern)(user_messages_1.UserMessages.USER_REGISTER),
     __param(0, (0, microservices_1.Payload)(common_1.ValidationPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto]),
     __metadata("design:returntype", void 0)
 ], UserController.prototype, "createUser", null);
+__decorate([
+    (0, microservices_1.MessagePattern)(user_messages_1.UserMessages.USER_LOGIN),
+    __param(0, (0, microservices_1.Payload)(common_1.ValidationPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [user_login_dto_1.UserLoginDto]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "userLogin", null);
 __decorate([
     (0, microservices_1.MessagePattern)('get_user'),
     __metadata("design:type", Function),

@@ -16,7 +16,11 @@ exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
 const microservices_1 = require("@nestjs/microservices");
 const auth_microserivce_pattern_1 = require("./enum/auth-microserivce.pattern");
-const AuthPatternList = [auth_microserivce_pattern_1.AuthPattern.CREATE_USER, auth_microserivce_pattern_1.AuthPattern.GET_USER];
+const AuthPatternList = [
+    auth_microserivce_pattern_1.AuthPattern.USER_REGISTER,
+    auth_microserivce_pattern_1.AuthPattern.USER_LOGIN,
+    auth_microserivce_pattern_1.AuthPattern.GET_USER,
+];
 let AuthService = class AuthService {
     constructor(authClient) {
         this.authClient = authClient;
@@ -30,13 +34,11 @@ let AuthService = class AuthService {
     onModuleDestroy() {
         this.authClient.close();
     }
-    async createUser() {
-        console.log('---> authClient emit create_user');
-        return this.authClient.send('create_user', {
-            email: 'dongnd@gmail.com',
-            firstName: 'Đồng',
-            lastName: 'Nguyễn Duy',
-        });
+    async createUser(data) {
+        return this.authClient.send(auth_microserivce_pattern_1.AuthPattern.USER_REGISTER, data);
+    }
+    async login(data) {
+        return this.authClient.send(auth_microserivce_pattern_1.AuthPattern.USER_LOGIN, data);
     }
     async getUser() {
         return this.authClient.send('get_user', {});

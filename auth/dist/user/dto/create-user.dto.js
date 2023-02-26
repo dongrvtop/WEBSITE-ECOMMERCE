@@ -12,22 +12,39 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateUserDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
+const role_type_1 = require("../../constants/role-type");
 class CreateUserDto {
 }
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'dongnd@gmail.com', nullable: false }),
-    (0, class_validator_1.IsEmail)(),
+    (0, swagger_1.ApiProperty)({ required: true }),
+    (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
-], CreateUserDto.prototype, "email", void 0);
+], CreateUserDto.prototype, "userName", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'Đồng', nullable: false }),
+    (0, swagger_1.ApiProperty)({ required: true, minLength: 8 }),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateUserDto.prototype, "password", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ required: true }),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "firstName", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'Nguyễn Duy', nullable: false }),
+    (0, swagger_1.ApiProperty)({ required: true }),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "lastName", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateUserDto.prototype, "phoneNumber", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ default: role_type_1.RoleType.USER }),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateUserDto.prototype, "role", void 0);
 exports.CreateUserDto = CreateUserDto;
 //# sourceMappingURL=create-user.dto.js.map
