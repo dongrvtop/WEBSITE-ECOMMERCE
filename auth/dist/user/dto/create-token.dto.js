@@ -9,21 +9,23 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TokenResponseDto = void 0;
+exports.CreateTokenDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
-class TokenResponseDto {
-    constructor(data) {
-        this.token = data.token;
-        this.expiresIn = data.expiresIn;
-    }
+const role_type_1 = require("../../constants/role-type");
+const token_type_1 = require("../../constants/token-type");
+class CreateTokenDto {
 }
 __decorate([
     (0, swagger_1.ApiProperty)(),
-    __metadata("design:type", Number)
-], TokenResponseDto.prototype, "expiresIn", void 0);
+    __metadata("design:type", String)
+], CreateTokenDto.prototype, "userId", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
-], TokenResponseDto.prototype, "token", void 0);
-exports.TokenResponseDto = TokenResponseDto;
-//# sourceMappingURL=token-response.dto.js.map
+], CreateTokenDto.prototype, "role", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], CreateTokenDto.prototype, "type", void 0);
+exports.CreateTokenDto = CreateTokenDto;
+//# sourceMappingURL=create-token.dto.js.map

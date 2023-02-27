@@ -10,7 +10,7 @@ import { User, UserDocument } from './schema/user.schema';
 import * as bcrypt from 'bcrypt';
 import { UserLoginDto } from './dto/user-login.dto';
 import { TokenResponseDto } from './dto/token-response.dto';
-import { CreateAccessTokenDto } from './dto/create-access-token.dto';
+import { CreateTokenDto } from './dto/create-token.dto';
 import { JwtService } from '@nestjs/jwt/dist';
 import { ConfigService } from '@nestjs/config';
 
@@ -51,17 +51,42 @@ export class UserService {
     return user!;
   }
 
-  async createAccessToken(
-    data: CreateAccessTokenDto,
-  ): Promise<TokenResponseDto> {
-    const accessToken = await this.jwtService.signAsync(data);
+  async createAccessToken(data: CreateTokenDto): Promise<TokenResponseDto> {
+    const accessToken = await this.jwtService.signAsync(data, {
+      secret: this.configService.get('JWT_SECRET'),
+      expiresIn: this.configService.get('JWT_EXPIRES_ACCESS_TOKEN'),
+    });
     return new TokenResponseDto({
       expiresIn: this.configService.get('JWT_EXPIRES_DATE'),
-      accessToken,
+      token: accessToken,
     });
   }
 
-  async getUser(): Promise<User[]> {
-    return await this.userModel.find().exec();
+  async createRefreshToken(data: CreateTokenDto): Promise<TokenResponseDto> {
+    const refreshToken = await this.jwtService.signAsync(data, {
+      secret: this.configService.get('JWT_SECRET'),
+      expiresIn: this.configService.get('JWT_EXPIRES_REFRESH_TOKEN'),
+    });
+    return new TokenResponseDto({
+      expiresIn: this.configService.get('JWT_EXPIRES_DATE'),
+      token: refreshToken,
+    });
+  }
+
+  async refreshAccessToken(refreshToken: string) {}
+
+  private async decodeRefreshToken(token: string) {
+    try {
+      return await this.jwtService.verifyAsync(token);
+    } catch (e) {}
+  }
+
+  async getUser(token: string) {
+    try {
+      const res = await this.jwtService.verifyAsync(token);
+      return res;
+    } catch (error) {
+      return 'Token expired';
+    }
   }
 }

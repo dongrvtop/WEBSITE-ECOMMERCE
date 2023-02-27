@@ -8,5 +8,5 @@ export declare class AuthService {
     onModuleDestroy(): void;
     createUser(data: CreateUserDto): Promise<import("rxjs").Observable<string>>;
     login(data: UserLoginDto): Promise<import("rxjs").Observable<any>>;
-    getUser(): Promise<import("rxjs").Observable<any>>;
+    getUser(token: string): Promise<import("rxjs").Observable<any>>;
 }

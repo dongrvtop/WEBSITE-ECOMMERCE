@@ -51,14 +51,40 @@ let UserService = class UserService {
         return user;
     }
     async createAccessToken(data) {
-        const accessToken = await this.jwtService.signAsync(data);
+        const accessToken = await this.jwtService.signAsync(data, {
+            secret: this.configService.get('JWT_SECRET'),
+            expiresIn: this.configService.get('JWT_EXPIRES_ACCESS_TOKEN'),
+        });
         return new token_response_dto_1.TokenResponseDto({
             expiresIn: this.configService.get('JWT_EXPIRES_DATE'),
-            accessToken,
+            token: accessToken,
         });
     }
-    async getUser() {
-        return await this.userModel.find().exec();
+    async createRefreshToken(data) {
+        const refreshToken = await this.jwtService.signAsync(data, {
+            secret: this.configService.get('JWT_SECRET'),
+            expiresIn: this.configService.get('JWT_EXPIRES_REFRESH_TOKEN'),
+        });
+        return new token_response_dto_1.TokenResponseDto({
+            expiresIn: this.configService.get('JWT_EXPIRES_DATE'),
+            token: refreshToken,
+        });
+    }
+    async refreshAccessToken(refreshToken) { }
+    async decodeRefreshToken(token) {
+        try {
+            return await this.jwtService.verifyAsync(token);
+        }
+        catch (e) { }
+    }
+    async getUser(token) {
+        try {
+            const res = await this.jwtService.verifyAsync(token);
+            return res;
+        }
+        catch (error) {
+            return 'Token expired';
+        }
     }
 };
 UserService = __decorate([

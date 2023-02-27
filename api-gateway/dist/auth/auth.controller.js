@@ -28,8 +28,9 @@ let AuthController = class AuthController {
     login(data) {
         return this.authService.login(data);
     }
-    getUser() {
-        return this.authService.getUser();
+    getUser(token) {
+        console.log(`=======================${token}`);
+        return this.authService.getUser(token);
     }
 };
 __decorate([
@@ -48,8 +49,9 @@ __decorate([
 ], AuthController.prototype, "login", null);
 __decorate([
     (0, common_1.Get)('/get-user'),
+    __param(0, (0, common_1.Query)('token')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "getUser", null);
 AuthController = __decorate([

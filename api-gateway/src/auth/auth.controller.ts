@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, Param } from '@nestjs/common';
 import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -27,7 +27,9 @@ export class AuthController {
   }
 
   @Get('/get-user')
-  getUser() {
-    return this.authService.getUser();
+  // @ApiQuery({ name: 'token', type: 'string' })
+  getUser(@Query('token') token: string) {
+    console.log(`=======================${token}`);
+    return this.authService.getUser(token);
   }
 }

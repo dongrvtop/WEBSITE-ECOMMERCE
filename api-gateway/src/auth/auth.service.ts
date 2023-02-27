@@ -36,7 +36,7 @@ export class AuthService {
     return this.authClient.send<any>(AuthPattern.USER_LOGIN, data);
   }
 
-  async getUser() {
-    return this.authClient.send('get_user', {});
+  async getUser(token: string) {
+    return this.authClient.send('get_user', { token });
   }
 }

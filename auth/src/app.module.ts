@@ -6,10 +6,12 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { env } from 'process';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { DatabaseModule } from './config/database/database.module';
 import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
     ClientsModule.register([
       {
         name: 'AUTH_MICROSERVICE',
@@ -25,14 +27,7 @@ import { UserModule } from './user/user.module';
         },
       },
     ]),
-    MongooseModule.forRoot(
-      process.env.MONGODB_URL ??
-        'mongodb+srv://wsEcommerce:password_123@ecommerce.0hvhaod.mongodb.net/?retryWrites=true&w=majority',
-        {
-          dbName: 'website-ecommerce',
-        }
-    ),
-    ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
+    DatabaseModule,
     UserModule,
   ],
   controllers: [AppController],

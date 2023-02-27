@@ -29,17 +29,24 @@ let UserController = class UserController {
         return this.userService.createUser(data);
     }
     async userLogin(data) {
-        var _a;
+        var _a, _b;
         const user = await this.userService.validateUser(data);
-        const token = await this.userService.createAccessToken({
+        const accessToken = await this.userService.createAccessToken({
             userId: user.id,
             role: (_a = user.role) !== null && _a !== void 0 ? _a : role_type_1.RoleType.USER,
             type: token_type_1.TokenType.ACCESS_TOKEN,
         });
-        return { user, token };
+        const refreshToken = await this.userService.createRefreshToken({
+            userId: user.id,
+            role: (_b = user.role) !== null && _b !== void 0 ? _b : role_type_1.RoleType.USER,
+            type: token_type_1.TokenType.REFRESH_TOKEN,
+        });
+        return { user, accessToken, refreshToken };
     }
-    getUser() {
-        return this.userService.getUser();
+    getUser(data) {
+        const { token } = data;
+        console.log(`======================${token}`);
+        return this.userService.getUser(token);
     }
 };
 __decorate([
@@ -58,8 +65,9 @@ __decorate([
 ], UserController.prototype, "userLogin", null);
 __decorate([
     (0, microservices_1.MessagePattern)('get_user'),
+    __param(0, (0, microservices_1.Payload)(common_1.ValidationPipe)),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], UserController.prototype, "getUser", null);
 UserController = __decorate([

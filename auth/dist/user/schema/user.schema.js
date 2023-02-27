@@ -41,6 +41,10 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "phoneNumber", void 0);
 __decorate([
+    (0, mongoose_1.Prop)(),
+    __metadata("design:type", String)
+], User.prototype, "refreshToken", void 0);
+__decorate([
     (0, mongoose_1.Prop)({ default: role_type_1.RoleType.USER }),
     __metadata("design:type", String)
 ], User.prototype, "role", void 0);

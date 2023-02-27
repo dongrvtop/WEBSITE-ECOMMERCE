@@ -5,7 +5,6 @@ import { TokenType } from 'src/constants/token-type';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserLoginDto } from './dto/user-login.dto';
 import { UserMessages } from './enum/user-messages';
-import { User } from './schema/user.schema';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -20,16 +19,23 @@ export class UserController {
   @MessagePattern(UserMessages.USER_LOGIN)
   async userLogin(@Payload(ValidationPipe) data: UserLoginDto) {
     const user = await this.userService.validateUser(data);
-    const token = await this.userService.createAccessToken({
+    const accessToken = await this.userService.createAccessToken({
       userId: user.id,
       role: (user.role as RoleType) ?? RoleType.USER,
       type: TokenType.ACCESS_TOKEN,
     });
-    return { user, token };
+    const refreshToken = await this.userService.createRefreshToken({
+      userId: user.id,
+      role: (user.role as RoleType) ?? RoleType.USER,
+      type: TokenType.REFRESH_TOKEN,
+    });
+    return { user, accessToken, refreshToken };
   }
 
   @MessagePattern('get_user')
-  getUser() {
-    return this.userService.getUser();
+  getUser(@Payload(ValidationPipe) data: any) {
+    const { token } = data;
+    console.log(`======================${token}`);
+    return this.userService.getUser(token);
   }
 }

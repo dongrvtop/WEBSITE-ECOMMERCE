@@ -31,6 +31,7 @@ export declare class User {
     firstName: string;
     lastName: string;
     phoneNumber: string;
+    refreshToken: string;
     role: string;
 }
 export declare const UserSchema: import("mongoose").Schema<User, import("mongoose").Model<User, any, any, any, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, User>;

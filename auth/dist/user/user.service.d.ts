@@ -27,7 +27,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { User, UserDocument } from './schema/user.schema';
 import { UserLoginDto } from './dto/user-login.dto';
 import { TokenResponseDto } from './dto/token-response.dto';
-import { CreateAccessTokenDto } from './dto/create-access-token.dto';
+import { CreateTokenDto } from './dto/create-token.dto';
 import { JwtService } from '@nestjs/jwt/dist';
 import { ConfigService } from '@nestjs/config';
 export declare class UserService {
@@ -41,6 +41,9 @@ export declare class UserService {
         _id: import("mongoose").Types.ObjectId;
     }>>;
     validateUser(data: UserLoginDto): Promise<User>;
-    createAccessToken(data: CreateAccessTokenDto): Promise<TokenResponseDto>;
-    getUser(): Promise<User[]>;
+    createAccessToken(data: CreateTokenDto): Promise<TokenResponseDto>;
+    createRefreshToken(data: CreateTokenDto): Promise<TokenResponseDto>;
+    refreshAccessToken(refreshToken: string): Promise<void>;
+    private decodeRefreshToken;
+    getUser(token: string): Promise<any>;
 }

@@ -45,6 +45,7 @@ __decorate([
         enum: role_type_1.RoleType,
         enumName: 'role',
         default: role_type_1.RoleType.USER,
+        description: 'USER for user, ADMIN for admin',
     }),
     (0, class_validator_1.IsEnum)(role_type_1.RoleType),
     __metadata("design:type", String)

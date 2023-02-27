@@ -1,8 +1,8 @@
 export declare class TokenResponseDto {
     expiresIn: number;
-    accessToken: string;
+    token: string;
     constructor(data: {
         expiresIn: number;
-        accessToken: string;
+        token: string;
     });
 }

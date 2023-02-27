@@ -5,10 +5,10 @@ export class TokenResponseDto {
   expiresIn: number;
 
   @ApiProperty()
-  accessToken: string;
+  token: string;
 
-  constructor(data: { expiresIn: number; accessToken: string }) {
-    this.accessToken = data.accessToken;
+  constructor(data: { expiresIn: number; token: string }) {
+    this.token = data.token;
     this.expiresIn = data.expiresIn;
   }
 }

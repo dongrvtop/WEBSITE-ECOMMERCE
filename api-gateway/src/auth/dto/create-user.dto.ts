@@ -27,6 +27,7 @@ export class CreateUserDto {
     enum: RoleType,
     enumName: 'role',
     default: RoleType.USER,
+    description: 'USER for user, ADMIN for admin',
   })
   @IsEnum(RoleType)
   role: RoleType;

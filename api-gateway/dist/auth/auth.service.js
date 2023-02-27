@@ -40,8 +40,8 @@ let AuthService = class AuthService {
     async login(data) {
         return this.authClient.send(auth_microserivce_pattern_1.AuthPattern.USER_LOGIN, data);
     }
-    async getUser() {
-        return this.authClient.send('get_user', {});
+    async getUser(token) {
+        return this.authClient.send('get_user', { token });
     }
 };
 AuthService = __decorate([

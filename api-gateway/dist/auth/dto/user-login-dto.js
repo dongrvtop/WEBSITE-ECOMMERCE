@@ -15,12 +15,12 @@ const class_validator_1 = require("class-validator");
 class UserLoginDto {
 }
 __decorate([
-    (0, swagger_1.ApiProperty)({ required: true }),
+    (0, swagger_1.ApiProperty)({ required: true, example: 'dongnd' }),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], UserLoginDto.prototype, "userName", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ required: true }),
+    (0, swagger_1.ApiProperty)({ required: true, example: '12345678' }),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], UserLoginDto.prototype, "password", void 0);
