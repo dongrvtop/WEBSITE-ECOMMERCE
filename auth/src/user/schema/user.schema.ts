@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Exclude } from 'class-transformer';
+import { classToPlain, Exclude } from 'class-transformer';
 import { HydratedDocument } from 'mongoose';
 import { RoleType } from 'src/constants/role-type';
 
@@ -7,7 +7,7 @@ export type UserDocument = HydratedDocument<User>;
 
 @Schema()
 export class User {
-  @Prop({ _id: true, auto: true })
+  @Prop({  auto: true })
   id: string;
 
   @Prop({ required: true, unique: true })
@@ -30,4 +30,16 @@ export class User {
   role: string;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+// export const UserSchema = SchemaFactory.createForClass(User);
+export const UserSchema = (() =>   {
+   const userSchema = SchemaFactory.createForClass(User);
+   userSchema.set('toJSON', {
+        transform: function (_, ret) {
+          const newId = ret.id;
+          delete ret.id;
+          delete ret.password;
+          return { id: newId, ...ret };
+        },
+   });
+   return userSchema;
+})();

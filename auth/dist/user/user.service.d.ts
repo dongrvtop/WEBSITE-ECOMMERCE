@@ -40,11 +40,7 @@ export declare class UserService {
     }, never> & Required<{
         _id: import("mongoose").Types.ObjectId;
     }>>;
-    validateUser(data: UserLoginDto): Promise<import("mongoose").Document<unknown, any, User> & Omit<User & {
-        _id: import("mongoose").Types.ObjectId;
-    }, never> & Required<{
-        _id: import("mongoose").Types.ObjectId;
-    }>>;
+    validateUser(data: UserLoginDto): Promise<User>;
     createAccessToken(data: CreateAccessTokenDto): Promise<TokenResponseDto>;
     getUser(): Promise<User[]>;
 }

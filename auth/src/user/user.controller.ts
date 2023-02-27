@@ -5,6 +5,7 @@ import { TokenType } from 'src/constants/token-type';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserLoginDto } from './dto/user-login.dto';
 import { UserMessages } from './enum/user-messages';
+import { User } from './schema/user.schema';
 import { UserService } from './user.service';
 
 @Controller('user')

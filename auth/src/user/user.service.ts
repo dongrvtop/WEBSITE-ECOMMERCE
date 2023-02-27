@@ -32,11 +32,13 @@ export class UserService {
       );
     }
     data.password = await bcrypt.hash(data.password, 10);
-    return await this.userModel.create(data);
+    const user = await this.userModel.create(data);
+    // delete user?.password;
+    return user;
   }
 
   async validateUser(data: UserLoginDto) {
-    const user = await this.userModel
+    const user: User = await this.userModel
       .findOne({ userName: data.userName })
       .exec();
     if (!user) {

@@ -36,7 +36,9 @@ AppModule = __decorate([
                     },
                 },
             ]),
-            mongoose_1.MongooseModule.forRoot((_a = process.env.MONGODB_URL) !== null && _a !== void 0 ? _a : 'mongodb+srv://wsEcommerce:password_123@ecommerce.0hvhaod.mongodb.net/?retryWrites=true&w=majority'),
+            mongoose_1.MongooseModule.forRoot((_a = process.env.MONGODB_URL) !== null && _a !== void 0 ? _a : 'mongodb+srv://wsEcommerce:password_123@ecommerce.0hvhaod.mongodb.net/?retryWrites=true&w=majority', {
+                dbName: 'website-ecommerce',
+            }),
             config_1.ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
             user_module_1.UserModule,
         ],

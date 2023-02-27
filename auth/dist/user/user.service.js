@@ -34,7 +34,8 @@ let UserService = class UserService {
             throw new common_1.BadRequestException('Username was availble. Please choose another one.');
         }
         data.password = await bcrypt.hash(data.password, 10);
-        return await this.userModel.create(data);
+        const user = await this.userModel.create(data);
+        return user;
     }
     async validateUser(data) {
         const user = await this.userModel

@@ -16,7 +16,7 @@ const role_type_1 = require("../../constants/role-type");
 let User = class User {
 };
 __decorate([
-    (0, mongoose_1.Prop)({ _id: true, auto: true }),
+    (0, mongoose_1.Prop)({ auto: true }),
     __metadata("design:type", String)
 ], User.prototype, "id", void 0);
 __decorate([
@@ -48,5 +48,16 @@ User = __decorate([
     (0, mongoose_1.Schema)()
 ], User);
 exports.User = User;
-exports.UserSchema = mongoose_1.SchemaFactory.createForClass(User);
+exports.UserSchema = (() => {
+    const userSchema = mongoose_1.SchemaFactory.createForClass(User);
+    userSchema.set('toJSON', {
+        transform: function (_, ret) {
+            const newId = ret.id;
+            delete ret.id;
+            delete ret.password;
+            return Object.assign({ id: newId }, ret);
+        },
+    });
+    return userSchema;
+})();
 //# sourceMappingURL=user.schema.js.map
