@@ -10,5 +10,5 @@ export class CreateTokenDto {
   role: RoleType;
 
   @ApiProperty()
-  type: TokenType;
+  type?: TokenType;
 }

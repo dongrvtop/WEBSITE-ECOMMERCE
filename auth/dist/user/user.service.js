@@ -20,13 +20,16 @@ const bcrypt = require("bcrypt");
 const token_response_dto_1 = require("./dto/token-response.dto");
 const dist_1 = require("@nestjs/jwt/dist");
 const config_1 = require("@nestjs/config");
+const token_type_1 = require("../constants/token-type");
+const role_type_1 = require("../constants/role-type");
 let UserService = class UserService {
     constructor(userModel, jwtService, configService) {
         this.userModel = userModel;
         this.jwtService = jwtService;
         this.configService = configService;
     }
-    async createUser(data) {
+    async register(data) {
+        var _a;
         const checkUser = await this.userModel
             .findOne({ userName: data.userName })
             .exec();
@@ -35,12 +38,25 @@ let UserService = class UserService {
         }
         data.password = await bcrypt.hash(data.password, 10);
         const user = await this.userModel.create(data);
-        return user;
+        const createTokenPayload = {
+            userId: user.id,
+            role: (_a = user.role) !== null && _a !== void 0 ? _a : role_type_1.RoleType.USER,
+        };
+        const accessToken = await this.createAccessToken(createTokenPayload);
+        const refreshToken = await this.createRefreshToken(createTokenPayload);
+        user.refreshToken = refreshToken.token;
+        await this.userModel.findByIdAndUpdate(user.id, user);
+        delete user.password;
+        delete user.refreshToken;
+        return {
+            user,
+            accessToken,
+            refreshToken,
+        };
     }
-    async validateUser(data) {
-        const user = await this.userModel
-            .findOne({ userName: data.userName })
-            .exec();
+    async login(data) {
+        var _a;
+        const user = await this.validateUser(data);
         if (!user) {
             throw new common_1.NotFoundException('Username does not exist.');
         }
@@ -48,34 +64,61 @@ let UserService = class UserService {
         if (!checkPassword) {
             throw new common_1.BadRequestException('Password is incorrect. Please try again.');
         }
+        const createTokenPayload = {
+            userId: user.id,
+            role: (_a = user.role) !== null && _a !== void 0 ? _a : role_type_1.RoleType.USER,
+        };
+        const accessToken = await this.createAccessToken(createTokenPayload);
+        const refreshToken = await this.createRefreshToken(createTokenPayload);
+        user.refreshToken = refreshToken.token;
+        await this.userModel.findByIdAndUpdate(user.id, user);
+        delete user.password;
+        delete user.refreshToken;
+        return {
+            user,
+            accessToken,
+            refreshToken,
+        };
+    }
+    async validateUser(data) {
+        const user = await this.userModel
+            .findOne({ userName: data.userName })
+            .exec();
         return user;
     }
     async createAccessToken(data) {
+        data.type = token_type_1.TokenType.ACCESS_TOKEN;
         const accessToken = await this.jwtService.signAsync(data, {
             secret: this.configService.get('JWT_SECRET'),
             expiresIn: this.configService.get('JWT_EXPIRES_ACCESS_TOKEN'),
         });
         return new token_response_dto_1.TokenResponseDto({
-            expiresIn: this.configService.get('JWT_EXPIRES_DATE'),
+            expiresIn: this.configService.get('JWT_EXPIRES_ACCESS_TOKEN'),
             token: accessToken,
         });
     }
     async createRefreshToken(data) {
+        data.type = token_type_1.TokenType.REFRESH_TOKEN;
         const refreshToken = await this.jwtService.signAsync(data, {
             secret: this.configService.get('JWT_SECRET'),
             expiresIn: this.configService.get('JWT_EXPIRES_REFRESH_TOKEN'),
         });
         return new token_response_dto_1.TokenResponseDto({
-            expiresIn: this.configService.get('JWT_EXPIRES_DATE'),
+            expiresIn: this.configService.get('JWT_EXPIRES_REFRESH_TOKEN'),
             token: refreshToken,
         });
     }
-    async refreshAccessToken(refreshToken) { }
-    async decodeRefreshToken(token) {
+    async refreshAccessToken(refreshToken) {
+        const isRefreshTokenExpired = await this.validateToken(refreshToken);
+    }
+    async validateToken(token) {
         try {
-            return await this.jwtService.verifyAsync(token);
+            await this.jwtService.verifyAsync(token);
+            return false;
         }
-        catch (e) { }
+        catch (e) {
+            return true;
+        }
     }
     async getUser(token) {
         try {

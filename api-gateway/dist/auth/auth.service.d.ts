@@ -6,7 +6,8 @@ export declare class AuthService {
     constructor(authClient: ClientKafka);
     onModuleInit(): Promise<void>;
     onModuleDestroy(): void;
-    createUser(data: CreateUserDto): Promise<import("rxjs").Observable<string>>;
+    createUser(data: CreateUserDto): Promise<import("rxjs").Observable<any>>;
     login(data: UserLoginDto): Promise<import("rxjs").Observable<any>>;
+    refreshAccessToken(userId: string, refreshToken: string): Promise<import("rxjs").Observable<any>>;
     getUser(token: string): Promise<import("rxjs").Observable<any>>;
 }

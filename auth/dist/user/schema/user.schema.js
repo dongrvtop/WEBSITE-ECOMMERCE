@@ -56,10 +56,9 @@ exports.UserSchema = (() => {
     const userSchema = mongoose_1.SchemaFactory.createForClass(User);
     userSchema.set('toJSON', {
         transform: function (_, ret) {
-            const newId = ret.id;
-            delete ret.id;
+            delete ret.refreshToken;
             delete ret.password;
-            return Object.assign({ id: newId }, ret);
+            return ret;
         },
     });
     return userSchema;

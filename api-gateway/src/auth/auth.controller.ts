@@ -11,12 +11,6 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('/register')
-  // @ApiQuery({
-  //   name: 'role',
-  //   // default: RoleType.USER,
-  //   example: RoleType.USER,
-  //   enum: RoleType,
-  // })
   createUser(@Body() data: CreateUserDto) {
     return this.authService.createUser(data);
   }
@@ -24,6 +18,11 @@ export class AuthController {
   @Post('/login')
   login(@Body() data: UserLoginDto) {
     return this.authService.login(data);
+  }
+
+  @Post('/refresh-token')
+  refreshAccessToken(@Query('userId') userId: string, @Query('refreshToken') refreshToken: string){
+    return
   }
 
   @Get('/get-user')
