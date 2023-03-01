@@ -1,9 +1,17 @@
-import { Controller, Get, Post, Body, Query, Param } from '@nestjs/common';
-import { ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserLoginDto } from './dto/user-login-dto';
-import { RoleType } from './enum/role-type';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -21,8 +29,17 @@ export class AuthController {
   }
 
   @Post('/refresh-token')
-  refreshAccessToken(@Query('userId') userId: string, @Query('refreshToken') refreshToken: string){
+  refreshAccessToken(
+    @Query('userId') userId: string,
+    @Query('refreshToken') refreshToken: string,
+  ) {
     return this.authService.refreshAccessToken(userId, refreshToken);
+  }
+
+  @Get('/auth/google/callback')
+  @UseGuards(AuthGuard('google'))
+  googleAuthRedirect(@Req() req) {
+    return this.authService.googleAuthRedirect(req);
   }
 
   @Get('/get-user')

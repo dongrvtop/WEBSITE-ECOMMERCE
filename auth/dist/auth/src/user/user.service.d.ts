@@ -20,6 +20,11 @@ export declare class UserService {
         message: string;
         data: any;
     }>;
+    googleLogin(req: any): Promise<{
+        statusCode: number;
+        message: string;
+        data: any;
+    }>;
     validateUser(data: UserLoginDto): Promise<User>;
     private createAccessToken;
     private createRefreshToken;

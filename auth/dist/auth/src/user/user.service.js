@@ -73,7 +73,9 @@ let UserService = class UserService {
         };
         const accessToken = await this.createAccessToken(createTokenPayload);
         const refreshToken = await this.createRefreshToken(createTokenPayload);
-        await this.userModel.findByIdAndUpdate(user.id, { refreshToken: refreshToken.token }).exec();
+        await this.userModel
+            .findByIdAndUpdate(user.id, { refreshToken: refreshToken.token })
+            .exec();
         delete user.password;
         const response = {
             user,
@@ -81,6 +83,12 @@ let UserService = class UserService {
             refreshToken,
         };
         return index_1.SuccessResponse.from(response);
+    }
+    async googleLogin(req) {
+        if (!req.user) {
+            return index_1.SuccessResponse.from(null, index_1.StatusCode.BAD_REQUEST, 'No user from gooogle');
+        }
+        return index_1.SuccessResponse.from(req.user);
     }
     async validateUser(data) {
         const user = await this.userModel
@@ -115,7 +123,7 @@ let UserService = class UserService {
     }
     async refreshAccessToken(data) {
         var _a;
-        const isRefreshTokenExpired = !await this.validateToken(data.refreshToken);
+        const isRefreshTokenExpired = !(await this.validateToken(data.refreshToken));
         if (isRefreshTokenExpired) {
             return index_1.SuccessResponse.from(null, index_1.StatusCode.BAD_REQUEST, 'Refresh token has expired');
         }

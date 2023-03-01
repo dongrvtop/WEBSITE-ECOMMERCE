@@ -14,6 +14,7 @@ const module_1 = require("@nestjs/microservices/module");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const database_module_1 = require("./config/database/database.module");
+const google_strategy_1 = require("./strategy/google.strategy");
 const user_module_1 = require("./user/user.module");
 let AppModule = class AppModule {
 };
@@ -40,7 +41,7 @@ AppModule = __decorate([
             user_module_1.UserModule,
         ],
         controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService],
+        providers: [app_service_1.AppService, google_strategy_1.GoogleStrategy],
     })
 ], AppModule);
 exports.AppModule = AppModule;

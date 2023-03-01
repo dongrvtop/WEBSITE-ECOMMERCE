@@ -1,15 +1,20 @@
-import { Inject, Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  OnModuleInit,
+  OnModuleDestroy,
+} from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserLoginDto } from './dto/user-login-dto';
 import { AuthPattern } from './enum/auth-microserivce.pattern';
-
 
 const AuthPatternList = [
   AuthPattern.USER_REGISTER,
   AuthPattern.USER_LOGIN,
   AuthPattern.GET_USER,
   AuthPattern.REFRESH_ACCESS_TOKEN,
+  AuthPattern.OAUTH2_GOOGLE_LOGIN,
 ];
 
 @Injectable()
@@ -38,8 +43,15 @@ export class AuthService implements OnModuleInit, OnModuleDestroy {
     return this.authClient.send(AuthPattern.USER_LOGIN, data);
   }
 
-  async refreshAccessToken(userId: string, refreshToken: string){
-    return this.authClient.send(AuthPattern.REFRESH_ACCESS_TOKEN, {userId, refreshToken});
+  async refreshAccessToken(userId: string, refreshToken: string) {
+    return this.authClient.send(AuthPattern.REFRESH_ACCESS_TOKEN, {
+      userId,
+      refreshToken,
+    });
+  }
+
+  async googleAuthRedirect(req: any) {
+    return this.authClient.send(AuthPattern.OAUTH2_GOOGLE_LOGIN, req);
   }
 
   async getUser(token: string) {

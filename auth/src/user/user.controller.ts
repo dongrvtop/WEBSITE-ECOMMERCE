@@ -12,21 +12,34 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @MessagePattern(UserMessages.USER_REGISTER)
-  async createUser(@Payload(ValidationPipe) data: CreateUserDto): Promise<SuccessResponse> {
+  async createUser(
+    @Payload(ValidationPipe) data: CreateUserDto,
+  ): Promise<SuccessResponse> {
     const response = await this.userService.register(data);
     return response;
   }
 
   @MessagePattern(UserMessages.USER_LOGIN)
-  async userLogin(@Payload(ValidationPipe) data: UserLoginDto): Promise<SuccessResponse> {
+  async userLogin(
+    @Payload(ValidationPipe) data: UserLoginDto,
+  ): Promise<SuccessResponse> {
     const response = await this.userService.login(data);
     return response;
   }
 
   @MessagePattern(UserMessages.REFRESH_ACCESS_TOKEN)
-  async refreshAccessToken(@Payload(ValidationPipe) data: RefreshAccessTokenDto): Promise<SuccessResponse> {
+  async refreshAccessToken(
+    @Payload(ValidationPipe) data: RefreshAccessTokenDto,
+  ): Promise<SuccessResponse> {
     const response = await this.userService.refreshAccessToken(data);
     return response;
+  }
+
+  async googleAuth(@Payload(ValidationPipe) data: any) {}
+
+  @MessagePattern(UserMessages.OAUTH2_GOOGLE_LOGIN)
+  async googleAuthRedirect(@Payload(ValidationPipe) req: any) {
+    return this.userService.googleLogin(req);
   }
 
   @MessagePattern('get_user')

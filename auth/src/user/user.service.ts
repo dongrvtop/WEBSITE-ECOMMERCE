@@ -1,6 +1,4 @@
-import {
-  Injectable
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -29,14 +27,18 @@ export class UserService {
       .findOne({ userName: data.userName })
       .exec();
     if (checkUser) {
-      return SuccessResponse.from(null, StatusCode.BAD_REQUEST, 'Username was availble. Please choose another one.');
+      return SuccessResponse.from(
+        null,
+        StatusCode.BAD_REQUEST,
+        'Username was availble. Please choose another one.',
+      );
     }
     data.password = await bcrypt.hash(data.password, 10);
     let user = await this.userModel.create(data);
     const createTokenPayload: CreateTokenDto = {
       userId: user.id,
       role: (user.role as RoleType) ?? RoleType.USER,
-    }
+    };
     const accessToken = await this.createAccessToken(createTokenPayload);
     const refreshToken = await this.createRefreshToken(createTokenPayload);
     // user.refreshToken = refreshToken.token;
@@ -54,23 +56,33 @@ export class UserService {
     return SuccessResponse.from(response);
   }
 
-  async login(data: UserLoginDto){
+  async login(data: UserLoginDto) {
     const user = await this.validateUser(data);
     if (!user) {
-      return SuccessResponse.from(null, StatusCode.BAD_REQUEST, 'Username does not exist.');
+      return SuccessResponse.from(
+        null,
+        StatusCode.BAD_REQUEST,
+        'Username does not exist.',
+      );
     }
     const checkPassword = await bcrypt.compare(data.password, user.password);
     if (!checkPassword) {
-      return SuccessResponse.from(null, StatusCode.BAD_REQUEST, 'Password is incorrect. Please try again.');
+      return SuccessResponse.from(
+        null,
+        StatusCode.BAD_REQUEST,
+        'Password is incorrect. Please try again.',
+      );
     }
     const createTokenPayload: CreateTokenDto = {
       userId: user.id,
       role: (user.role as RoleType) ?? RoleType.USER,
-    }
+    };
     const accessToken = await this.createAccessToken(createTokenPayload);
     const refreshToken = await this.createRefreshToken(createTokenPayload);
     // user.refreshToken = refreshToken.token;
-    await this.userModel.findByIdAndUpdate(user.id,  {refreshToken: refreshToken.token}).exec();
+    await this.userModel
+      .findByIdAndUpdate(user.id, { refreshToken: refreshToken.token })
+      .exec();
     delete user.password;
     const response = {
       user,
@@ -80,11 +92,22 @@ export class UserService {
     return SuccessResponse.from(response);
   }
 
+  async googleLogin(req: any) {
+    if (!req.user) {
+      return SuccessResponse.from(
+        null,
+        StatusCode.BAD_REQUEST,
+        'No user from gooogle',
+      );
+    }
+    return SuccessResponse.from(req.user);
+  }
+
   async validateUser(data: UserLoginDto) {
     const user: User = await this.userModel
       .findOne({ userName: data.userName })
       .exec();
-    if(user){
+    if (user) {
       return user;
     }
     return null;
@@ -115,13 +138,23 @@ export class UserService {
   }
 
   async refreshAccessToken(data: RefreshAccessTokenDto) {
-    const isRefreshTokenExpired = !await this.validateToken(data.refreshToken);
-    if(isRefreshTokenExpired){
-      return SuccessResponse.from(null, StatusCode.BAD_REQUEST, 'Refresh token has expired');
+    const isRefreshTokenExpired = !(await this.validateToken(
+      data.refreshToken,
+    ));
+    if (isRefreshTokenExpired) {
+      return SuccessResponse.from(
+        null,
+        StatusCode.BAD_REQUEST,
+        'Refresh token has expired',
+      );
     }
     const user = await this.userModel.findById(data.userId).exec();
-    if(data.refreshToken !== user.refreshToken){
-      return SuccessResponse.from(null, StatusCode.BAD_REQUEST, 'Refresh token incorrect');
+    if (data.refreshToken !== user.refreshToken) {
+      return SuccessResponse.from(
+        null,
+        StatusCode.BAD_REQUEST,
+        'Refresh token incorrect',
+      );
     }
     const createAccessTokenPayload: CreateTokenDto = {
       userId: user.id,
@@ -131,7 +164,7 @@ export class UserService {
     const response = {
       user,
       accessToken,
-    }
+    };
     return SuccessResponse.from(response);
   }
 

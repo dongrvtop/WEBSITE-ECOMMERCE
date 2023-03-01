@@ -11,6 +11,7 @@ const common_1 = require("@nestjs/common");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const auth_module_1 = require("./auth/auth.module");
+const google_strategy_1 = require("./strategy/google.strategy");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -19,7 +20,7 @@ AppModule = __decorate([
             auth_module_1.AuthModule,
         ],
         controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService],
+        providers: [app_service_1.AppService, google_strategy_1.GoogleStrategy],
     })
 ], AppModule);
 exports.AppModule = AppModule;
