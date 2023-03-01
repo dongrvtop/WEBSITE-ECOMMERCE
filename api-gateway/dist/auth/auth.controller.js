@@ -29,10 +29,9 @@ let AuthController = class AuthController {
         return this.authService.login(data);
     }
     refreshAccessToken(userId, refreshToken) {
-        return;
+        return this.authService.refreshAccessToken(userId, refreshToken);
     }
     getUser(token) {
-        console.log(`=======================${token}`);
         return this.authService.getUser(token);
     }
 };

@@ -38,15 +38,16 @@ let UserService = class UserService {
             return index_1.SuccessResponse.from(null, index_1.StatusCode.BAD_REQUEST, 'Username was availble. Please choose another one.');
         }
         data.password = await bcrypt.hash(data.password, 10);
-        const user = await this.userModel.create(data);
+        let user = await this.userModel.create(data);
         const createTokenPayload = {
             userId: user.id,
             role: (_a = user.role) !== null && _a !== void 0 ? _a : role_type_1.RoleType.USER,
         };
         const accessToken = await this.createAccessToken(createTokenPayload);
         const refreshToken = await this.createRefreshToken(createTokenPayload);
-        user.refreshToken = refreshToken.token;
-        await this.userModel.findByIdAndUpdate(user.id, { refreshToken: refreshToken }, { new: true }).exec();
+        await this.userModel.findByIdAndUpdate(user._id, {
+            refreshToken: refreshToken.token,
+        });
         delete user.password;
         delete user.refreshToken;
         const response = {
@@ -72,10 +73,8 @@ let UserService = class UserService {
         };
         const accessToken = await this.createAccessToken(createTokenPayload);
         const refreshToken = await this.createRefreshToken(createTokenPayload);
-        user.refreshToken = refreshToken.token;
-        await this.userModel.findByIdAndUpdate(user.id, { refreshToken: refreshToken }, { overwrite: true }).exec();
+        await this.userModel.findByIdAndUpdate(user.id, { refreshToken: refreshToken.token }).exec();
         delete user.password;
-        delete user.refreshToken;
         const response = {
             user,
             accessToken,
@@ -116,7 +115,6 @@ let UserService = class UserService {
     }
     async refreshAccessToken(data) {
         var _a;
-        console.log(`===============Refresh token service`);
         const isRefreshTokenExpired = !await this.validateToken(data.refreshToken);
         if (isRefreshTokenExpired) {
             return index_1.SuccessResponse.from(null, index_1.StatusCode.BAD_REQUEST, 'Refresh token has expired');

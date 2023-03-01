@@ -1,7 +1,5 @@
 import {
-  Injectable,
-  NotFoundException,
-  BadRequestException,
+  Injectable
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -34,15 +32,18 @@ export class UserService {
       return SuccessResponse.from(null, StatusCode.BAD_REQUEST, 'Username was availble. Please choose another one.');
     }
     data.password = await bcrypt.hash(data.password, 10);
-    const user = await this.userModel.create(data);
+    let user = await this.userModel.create(data);
     const createTokenPayload: CreateTokenDto = {
       userId: user.id,
       role: (user.role as RoleType) ?? RoleType.USER,
     }
     const accessToken = await this.createAccessToken(createTokenPayload);
     const refreshToken = await this.createRefreshToken(createTokenPayload);
-    user.refreshToken = refreshToken.token;
-    await this.userModel.findByIdAndUpdate(user.id, {refreshToken: refreshToken}, {new: true}).exec();
+    // user.refreshToken = refreshToken.token;
+    // user.save();
+    await this.userModel.findByIdAndUpdate(user._id, {
+      refreshToken: refreshToken.token,
+    });
     delete user.password;
     delete user.refreshToken;
     const response = {
@@ -68,10 +69,9 @@ export class UserService {
     }
     const accessToken = await this.createAccessToken(createTokenPayload);
     const refreshToken = await this.createRefreshToken(createTokenPayload);
-    user.refreshToken = refreshToken.token;
-    await this.userModel.findByIdAndUpdate(user.id,  {refreshToken: refreshToken}, {overwrite: true}).exec();
+    // user.refreshToken = refreshToken.token;
+    await this.userModel.findByIdAndUpdate(user.id,  {refreshToken: refreshToken.token}).exec();
     delete user.password;
-    delete user.refreshToken;
     const response = {
       user,
       accessToken,
@@ -90,7 +90,7 @@ export class UserService {
     return null;
   }
 
-  private async createAccessToken(data: CreateTokenDto): Promise<TokenResponseDto> {
+  private async createAccessToken(data: CreateTokenDto) {
     data.type = TokenType.ACCESS_TOKEN;
     const accessToken = await this.jwtService.signAsync(data, {
       secret: this.configService.get('JWT_SECRET'),
@@ -102,7 +102,7 @@ export class UserService {
     });
   }
 
-  private async createRefreshToken(data: CreateTokenDto): Promise<TokenResponseDto> {
+  private async createRefreshToken(data: CreateTokenDto) {
     data.type = TokenType.REFRESH_TOKEN;
     const refreshToken = await this.jwtService.signAsync(data, {
       secret: this.configService.get('JWT_SECRET'),
@@ -115,7 +115,6 @@ export class UserService {
   }
 
   async refreshAccessToken(data: RefreshAccessTokenDto) {
-    console.log(`===============Refresh token service`);
     const isRefreshTokenExpired = !await this.validateToken(data.refreshToken);
     if(isRefreshTokenExpired){
       return SuccessResponse.from(null, StatusCode.BAD_REQUEST, 'Refresh token has expired');

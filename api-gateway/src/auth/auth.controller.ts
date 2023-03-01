@@ -22,13 +22,11 @@ export class AuthController {
 
   @Post('/refresh-token')
   refreshAccessToken(@Query('userId') userId: string, @Query('refreshToken') refreshToken: string){
-    return
+    return this.authService.refreshAccessToken(userId, refreshToken);
   }
 
   @Get('/get-user')
-  // @ApiQuery({ name: 'token', type: 'string' })
   getUser(@Query('token') token: string) {
-    console.log(`=======================${token}`);
     return this.authService.getUser(token);
   }
 }

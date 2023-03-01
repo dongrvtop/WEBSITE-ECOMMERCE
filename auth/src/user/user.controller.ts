@@ -13,22 +13,19 @@ export class UserController {
 
   @MessagePattern(UserMessages.USER_REGISTER)
   async createUser(@Payload(ValidationPipe) data: CreateUserDto): Promise<SuccessResponse> {
-    const response: SuccessResponse = await this.userService.register(data);
-    console.log(`=====REGISTER ${response}`);
+    const response = await this.userService.register(data);
     return response;
   }
 
   @MessagePattern(UserMessages.USER_LOGIN)
   async userLogin(@Payload(ValidationPipe) data: UserLoginDto): Promise<SuccessResponse> {
-    const response: SuccessResponse = await this.userService.login(data);
-    console.log(`=====LOGIn ${response}`);
+    const response = await this.userService.login(data);
     return response;
   }
 
   @MessagePattern(UserMessages.REFRESH_ACCESS_TOKEN)
   async refreshAccessToken(@Payload(ValidationPipe) data: RefreshAccessTokenDto): Promise<SuccessResponse> {
-    console.log(`=================Refresh token controller`);
-    const response: SuccessResponse = await this.userService.refreshAccessToken(data);
+    const response = await this.userService.refreshAccessToken(data);
     return response;
   }
 

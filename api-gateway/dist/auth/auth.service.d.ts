@@ -1,7 +1,8 @@
+import { OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserLoginDto } from './dto/user-login-dto';
-export declare class AuthService {
+export declare class AuthService implements OnModuleInit, OnModuleDestroy {
     private readonly authClient;
     constructor(authClient: ClientKafka);
     onModuleInit(): Promise<void>;

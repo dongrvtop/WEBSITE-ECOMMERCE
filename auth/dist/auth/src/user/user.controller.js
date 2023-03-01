@@ -26,16 +26,13 @@ let UserController = class UserController {
     }
     async createUser(data) {
         const response = await this.userService.register(data);
-        console.log(`=====REGISTER ${response}`);
         return response;
     }
     async userLogin(data) {
         const response = await this.userService.login(data);
-        console.log(`=====LOGIn ${response}`);
         return response;
     }
     async refreshAccessToken(data) {
-        console.log(`=================Refresh token controller`);
         const response = await this.userService.refreshAccessToken(data);
         return response;
     }

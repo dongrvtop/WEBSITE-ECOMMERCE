@@ -11,7 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserSchema = exports.User = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
-const class_transformer_1 = require("class-transformer");
 const role_type_1 = require("../../constants/role-type");
 let User = class User {
 };
@@ -25,7 +24,6 @@ __decorate([
 ], User.prototype, "userName", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ required: true, minlength: 8 }),
-    (0, class_transformer_1.Exclude)(),
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
 __decorate([
@@ -56,6 +54,7 @@ exports.UserSchema = (() => {
     const userSchema = mongoose_1.SchemaFactory.createForClass(User);
     userSchema.set('toJSON', {
         transform: function (_, ret) {
+            delete ret.refreshToken;
             delete ret.password;
             return ret;
         },

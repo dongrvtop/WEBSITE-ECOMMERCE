@@ -14,7 +14,6 @@ export class User {
   userName: string;
 
   @Prop({ required: true, minlength: 8 })
-  @Exclude()
   password: string;
 
   @Prop({ required: true })
@@ -38,7 +37,7 @@ export const UserSchema = (() => {
   const userSchema = SchemaFactory.createForClass(User);
   userSchema.set('toJSON', {
     transform: function (_, ret) {
-      // delete ret.refreshToken;
+      delete ret.refreshToken;
       delete ret.password;
       return ret;
     },

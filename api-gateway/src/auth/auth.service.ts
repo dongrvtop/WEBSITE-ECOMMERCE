@@ -1,9 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserLoginDto } from './dto/user-login-dto';
 import { AuthPattern } from './enum/auth-microserivce.pattern';
-import { SuccessResponse } from '../../../common/helpers/index';
+
 
 const AuthPatternList = [
   AuthPattern.USER_REGISTER,
@@ -13,7 +13,7 @@ const AuthPatternList = [
 ];
 
 @Injectable()
-export class AuthService {
+export class AuthService implements OnModuleInit, OnModuleDestroy {
   constructor(
     @Inject('AUTH_MICROSERVICE')
     private readonly authClient: ClientKafka,
@@ -35,7 +35,7 @@ export class AuthService {
   }
 
   async login(data: UserLoginDto) {
-    return this.authClient.send<SuccessResponse>(AuthPattern.USER_LOGIN, data);
+    return this.authClient.send(AuthPattern.USER_LOGIN, data);
   }
 
   async refreshAccessToken(userId: string, refreshToken: string){
