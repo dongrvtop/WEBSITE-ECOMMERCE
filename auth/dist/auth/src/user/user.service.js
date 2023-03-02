@@ -84,11 +84,17 @@ let UserService = class UserService {
         };
         return index_1.SuccessResponse.from(response);
     }
-    async googleLogin(req) {
-        if (!req.user) {
+    async googleLogin(user) {
+        if (!user) {
             return index_1.SuccessResponse.from(null, index_1.StatusCode.BAD_REQUEST, 'No user from gooogle');
         }
-        return index_1.SuccessResponse.from(req.user);
+        return index_1.SuccessResponse.from(user);
+    }
+    async facebookLogin(user) {
+        if (!user) {
+            return index_1.SuccessResponse.from(null, index_1.StatusCode.BAD_REQUEST, 'No user from facebook');
+        }
+        return index_1.SuccessResponse.from(user);
     }
     async validateUser(data) {
         const user = await this.userModel

@@ -8,5 +8,6 @@ var AuthPattern;
     AuthPattern["GET_USER"] = "get_user";
     AuthPattern["REFRESH_ACCESS_TOKEN"] = "refresh_access_token";
     AuthPattern["OAUTH2_GOOGLE_LOGIN"] = "oauth2_google_login";
+    AuthPattern["OAUTH2_FACEBOOK_LOGIN"] = "oauth2_facebook_login";
 })(AuthPattern = exports.AuthPattern || (exports.AuthPattern = {}));
 //# sourceMappingURL=auth-microserivce.pattern.js.map

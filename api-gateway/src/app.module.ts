@@ -1,10 +1,8 @@
 import { Module } from '@nestjs/common';
-import { ClientsModule } from '@nestjs/microservices';
-import { Transport } from '@nestjs/microservices/enums';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { GoogleStrategy } from './strategy/google.strategy';
+import { GoogleStrategy, FacebookStrategy } from './strategy/index';
 
 @Module({
   imports: [
@@ -27,6 +25,6 @@ import { GoogleStrategy } from './strategy/google.strategy';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService, GoogleStrategy],
+  providers: [AppService, GoogleStrategy, FacebookStrategy],
 })
 export class AppModule {}

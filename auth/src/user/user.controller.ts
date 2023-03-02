@@ -35,11 +35,14 @@ export class UserController {
     return response;
   }
 
-  async googleAuth(@Payload(ValidationPipe) data: any) {}
-
   @MessagePattern(UserMessages.OAUTH2_GOOGLE_LOGIN)
-  async googleAuthRedirect(@Payload(ValidationPipe) req: any) {
-    return this.userService.googleLogin(req);
+  async googleAuthRedirect(@Payload(ValidationPipe) user) {
+    return this.userService.googleLogin(user);
+  }
+
+  @MessagePattern(UserMessages.OAUTH2_FACEBOOK_LOGIN)
+  async facebookAuthRedirect(@Payload(ValidationPipe) user) {
+    return this.userService.facebookLogin(user);
   }
 
   @MessagePattern('get_user')

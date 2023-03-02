@@ -9,8 +9,12 @@ export declare class UserController {
     createUser(data: CreateUserDto): Promise<SuccessResponse>;
     userLogin(data: UserLoginDto): Promise<SuccessResponse>;
     refreshAccessToken(data: RefreshAccessTokenDto): Promise<SuccessResponse>;
-    googleAuth(data: any): Promise<void>;
-    googleAuthRedirect(req: any): Promise<{
+    googleAuthRedirect(user: any): Promise<{
+        statusCode: number;
+        message: string;
+        data: any;
+    }>;
+    facebookAuthRedirect(user: any): Promise<{
         statusCode: number;
         message: string;
         data: any;

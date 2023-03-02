@@ -27,13 +27,27 @@ let AuthController = class AuthController {
         return this.authService.createUser(data);
     }
     login(data) {
+        console.log(`bbbbbbbbbbbbbbbbbbbb`);
         return this.authService.login(data);
     }
     refreshAccessToken(userId, refreshToken) {
         return this.authService.refreshAccessToken(userId, refreshToken);
     }
+    googleLogin() {
+        return 'Login by oauth2.0 google';
+    }
     googleAuthRedirect(req) {
-        return this.authService.googleAuthRedirect(req);
+        return this.authService.googleAuthRedirect(req.user);
+    }
+    facebookLogin() {
+        return 'Login by oauth2.0 facebook';
+    }
+    facebookAuthRedirect(req) {
+        console.log(`REQ: ${JSON.stringify(req.user)}`);
+        return this.authService.facebookAuthRedirect(req.user);
+    }
+    getProfile(req) {
+        return req['user'];
     }
     getUser(token) {
         return this.authService.getUser(token);
@@ -62,13 +76,42 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "refreshAccessToken", null);
 __decorate([
-    (0, common_1.Get)('/auth/google/callback'),
+    (0, common_1.Get)('/google'),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('google')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "googleLogin", null);
+__decorate([
+    (0, common_1.Get)('/google/callback'),
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('google')),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "googleAuthRedirect", null);
+__decorate([
+    (0, common_1.Get)('/facebook'),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('facebook')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "facebookLogin", null);
+__decorate([
+    (0, common_1.Get)('/facebook/callback'),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('facebook')),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "facebookAuthRedirect", null);
+__decorate([
+    (0, common_1.Get)('profile'),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "getProfile", null);
 __decorate([
     (0, common_1.Get)('/get-user'),
     __param(0, (0, common_1.Query)('token')),

@@ -6,6 +6,7 @@ import {
   Query,
   Req,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
@@ -25,6 +26,7 @@ export class AuthController {
 
   @Post('/login')
   login(@Body() data: UserLoginDto) {
+    console.log(`bbbbbbbbbbbbbbbbbbbb`);
     return this.authService.login(data);
   }
 
@@ -36,10 +38,34 @@ export class AuthController {
     return this.authService.refreshAccessToken(userId, refreshToken);
   }
 
-  @Get('/auth/google/callback')
+  @Get('/google')
+  @UseGuards(AuthGuard('google'))
+  googleLogin(){
+    return 'Login by oauth2.0 google';
+  }
+
+  @Get('/google/callback')
   @UseGuards(AuthGuard('google'))
   googleAuthRedirect(@Req() req) {
-    return this.authService.googleAuthRedirect(req);
+    return this.authService.googleAuthRedirect(req.user);
+  }
+
+  @Get('/facebook')
+  @UseGuards(AuthGuard('facebook'))
+  facebookLogin(){
+    return 'Login by oauth2.0 facebook';
+  }
+
+  @Get('/facebook/callback')
+  @UseGuards(AuthGuard('facebook'))
+  facebookAuthRedirect(@Req() req){
+    console.log(`REQ: ${JSON.stringify(req.user)}`);
+    return this.authService.facebookAuthRedirect(req.user);
+  }
+
+  @Get('profile')
+  getProfile(@Request() req) {
+    return req['user'];
   }
 
   @Get('/get-user')

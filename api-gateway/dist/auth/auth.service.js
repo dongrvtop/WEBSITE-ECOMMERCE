@@ -22,6 +22,7 @@ const AuthPatternList = [
     auth_microserivce_pattern_1.AuthPattern.GET_USER,
     auth_microserivce_pattern_1.AuthPattern.REFRESH_ACCESS_TOKEN,
     auth_microserivce_pattern_1.AuthPattern.OAUTH2_GOOGLE_LOGIN,
+    auth_microserivce_pattern_1.AuthPattern.OAUTH2_FACEBOOK_LOGIN,
 ];
 let AuthService = class AuthService {
     constructor(authClient) {
@@ -48,8 +49,11 @@ let AuthService = class AuthService {
             refreshToken,
         });
     }
-    async googleAuthRedirect(req) {
-        return this.authClient.send(auth_microserivce_pattern_1.AuthPattern.OAUTH2_GOOGLE_LOGIN, req);
+    async googleAuthRedirect(user) {
+        return this.authClient.send(auth_microserivce_pattern_1.AuthPattern.OAUTH2_GOOGLE_LOGIN, user);
+    }
+    async facebookAuthRedirect(user) {
+        return this.authClient.send(auth_microserivce_pattern_1.AuthPattern.OAUTH2_FACEBOOK_LOGIN, user);
     }
     async getUser(token) {
         return this.authClient.send('get_user', { token });

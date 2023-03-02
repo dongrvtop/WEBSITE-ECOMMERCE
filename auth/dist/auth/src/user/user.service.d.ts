@@ -20,7 +20,12 @@ export declare class UserService {
         message: string;
         data: any;
     }>;
-    googleLogin(req: any): Promise<{
+    googleLogin(user: any): Promise<{
+        statusCode: number;
+        message: string;
+        data: any;
+    }>;
+    facebookLogin(user: any): Promise<{
         statusCode: number;
         message: string;
         data: any;

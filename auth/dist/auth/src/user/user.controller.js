@@ -36,9 +36,11 @@ let UserController = class UserController {
         const response = await this.userService.refreshAccessToken(data);
         return response;
     }
-    async googleAuth(data) { }
-    async googleAuthRedirect(req) {
-        return this.userService.googleLogin(req);
+    async googleAuthRedirect(user) {
+        return this.userService.googleLogin(user);
+    }
+    async facebookAuthRedirect(user) {
+        return this.userService.facebookLogin(user);
     }
     getUser(data) {
         const { token } = data;
@@ -68,18 +70,19 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "refreshAccessToken", null);
 __decorate([
-    __param(0, (0, microservices_1.Payload)(common_1.ValidationPipe)),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
-], UserController.prototype, "googleAuth", null);
-__decorate([
     (0, microservices_1.MessagePattern)(user_messages_1.UserMessages.OAUTH2_GOOGLE_LOGIN),
     __param(0, (0, microservices_1.Payload)(common_1.ValidationPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "googleAuthRedirect", null);
+__decorate([
+    (0, microservices_1.MessagePattern)(user_messages_1.UserMessages.OAUTH2_FACEBOOK_LOGIN),
+    __param(0, (0, microservices_1.Payload)(common_1.ValidationPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "facebookAuthRedirect", null);
 __decorate([
     (0, microservices_1.MessagePattern)('get_user'),
     __param(0, (0, microservices_1.Payload)(common_1.ValidationPipe)),

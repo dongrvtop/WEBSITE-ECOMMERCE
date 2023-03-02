@@ -13,7 +13,8 @@ import { TokenType } from 'src/constants/token-type';
 import { RoleType } from 'src/constants/role-type';
 import { SuccessResponse, StatusCode } from '../../../common/helpers/index';
 import { RefreshAccessTokenDto } from './dto/refresh-access-token.dto';
-
+import * as express from 'express';
+ 
 @Injectable()
 export class UserService {
   constructor(
@@ -92,15 +93,26 @@ export class UserService {
     return SuccessResponse.from(response);
   }
 
-  async googleLogin(req: any) {
-    if (!req.user) {
+  async googleLogin(user: any) {
+    if (!user) {
       return SuccessResponse.from(
         null,
         StatusCode.BAD_REQUEST,
         'No user from gooogle',
       );
     }
-    return SuccessResponse.from(req.user);
+    return SuccessResponse.from(user);
+  }
+
+  async facebookLogin(user: any){
+    if (!user) {
+      return SuccessResponse.from(
+        null,
+        StatusCode.BAD_REQUEST,
+        'No user from facebook',
+      );
+    }
+    return SuccessResponse.from(user);
   }
 
   async validateUser(data: UserLoginDto) {

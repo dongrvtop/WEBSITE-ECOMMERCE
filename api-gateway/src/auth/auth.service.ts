@@ -15,6 +15,7 @@ const AuthPatternList = [
   AuthPattern.GET_USER,
   AuthPattern.REFRESH_ACCESS_TOKEN,
   AuthPattern.OAUTH2_GOOGLE_LOGIN,
+  AuthPattern.OAUTH2_FACEBOOK_LOGIN,
 ];
 
 @Injectable()
@@ -50,8 +51,12 @@ export class AuthService implements OnModuleInit, OnModuleDestroy {
     });
   }
 
-  async googleAuthRedirect(req: any) {
-    return this.authClient.send(AuthPattern.OAUTH2_GOOGLE_LOGIN, req);
+  async googleAuthRedirect(user: any) {
+    return this.authClient.send(AuthPattern.OAUTH2_GOOGLE_LOGIN, user);
+  }
+
+  async facebookAuthRedirect(user: any){
+    return this.authClient.send(AuthPattern.OAUTH2_FACEBOOK_LOGIN, user);
   }
 
   async getUser(token: string) {
