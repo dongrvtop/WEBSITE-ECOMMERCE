@@ -16,6 +16,7 @@ exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const passport_1 = require("@nestjs/passport");
 const swagger_1 = require("@nestjs/swagger");
+const jwt_auth_guard_1 = require("../common/guards/jwt-auth.guard");
 const auth_service_1 = require("./auth.service");
 const create_user_dto_1 = require("./dto/create-user.dto");
 const user_login_dto_1 = require("./dto/user-login-dto");
@@ -107,6 +108,7 @@ __decorate([
 ], AuthController.prototype, "facebookAuthRedirect", null);
 __decorate([
     (0, common_1.Get)('profile'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __param(0, (0, common_1.Request)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -122,6 +124,7 @@ __decorate([
 AuthController = __decorate([
     (0, common_1.Controller)('auth'),
     (0, swagger_1.ApiTags)('auth'),
+    (0, swagger_1.ApiBearerAuth)(),
     __metadata("design:paramtypes", [auth_service_1.AuthService])
 ], AuthController);
 exports.AuthController = AuthController;

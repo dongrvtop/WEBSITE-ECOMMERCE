@@ -8,19 +8,35 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
+const core_1 = require("@nestjs/core");
+const jwt_1 = require("@nestjs/jwt");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const auth_module_1 = require("./auth/auth.module");
-const index_1 = require("./strategy/index");
+const jwt_constants_1 = require("./common/constants/jwt.constants");
+const guards_1 = require("./common/guards");
+const index_1 = require("./common/strategy/index");
+const jwt_strategy_1 = require("./common/strategy/jwt.strategy");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
             auth_module_1.AuthModule,
+            jwt_1.JwtModule.register({
+                secret: jwt_constants_1.jwtConstants.secret,
+                signOptions: {
+                    expiresIn: '14d',
+                }
+            }),
         ],
         controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService, index_1.GoogleStrategy, index_1.FacebookStrategy],
+        providers: [app_service_1.AppService, index_1.GoogleStrategy, index_1.FacebookStrategy, {
+                provide: core_1.APP_GUARD,
+                useClass: guards_1.RolesGuard,
+            },
+            jwt_strategy_1.JwtStrategy,
+        ],
     })
 ], AppModule);
 exports.AppModule = AppModule;

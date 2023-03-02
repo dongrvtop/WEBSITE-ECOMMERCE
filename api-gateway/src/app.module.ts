@@ -1,8 +1,13 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtModule } from '@nestjs/jwt';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { GoogleStrategy, FacebookStrategy } from './strategy/index';
+import { jwtConstants } from './common/constants/jwt.constants';
+import { RolesGuard } from './common/guards';
+import { GoogleStrategy, FacebookStrategy } from './common/strategy/index';
+import { JwtStrategy } from './common/strategy/jwt.strategy';
 
 @Module({
   imports: [
@@ -23,8 +28,19 @@ import { GoogleStrategy, FacebookStrategy } from './strategy/index';
     //   },
     // ]),
     AuthModule,
+    JwtModule.register({
+      secret: jwtConstants.secret,
+      signOptions: {
+        expiresIn: '14d',
+      }
+    }),
   ],
   controllers: [AppController],
-  providers: [AppService, GoogleStrategy, FacebookStrategy],
+  providers: [AppService, GoogleStrategy, FacebookStrategy, {
+    provide: APP_GUARD,
+    useClass: RolesGuard,
+  },
+  JwtStrategy,
+  ],
 })
 export class AppModule {}

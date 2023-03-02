@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { GoogleStrategy, FacebookStrategy } from 'src/strategy/index';
+import { GoogleStrategy, FacebookStrategy } from 'src/common/strategy/index';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 
