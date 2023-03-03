@@ -37,7 +37,7 @@ export class UserController {
 
   @MessagePattern(UserMessages.OAUTH2_GOOGLE_LOGIN)
   async googleAuthRedirect(@Payload(ValidationPipe) user) {
-    return this.userService.googleLogin(user);
+    return this.userService.googleLogin(user.accessToken);
   }
 
   @MessagePattern(UserMessages.OAUTH2_FACEBOOK_LOGIN)

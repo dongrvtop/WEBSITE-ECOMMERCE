@@ -2,6 +2,8 @@ import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User, UserDocument } from './schema/user.schema';
 import { UserLoginDto } from './dto/user-login.dto';
+import { TokenResponseDto } from './dto/token-response.dto';
+import { CreateTokenDto } from './dto/create-token.dto';
 import { JwtService } from '@nestjs/jwt/dist';
 import { ConfigService } from '@nestjs/config';
 import { RefreshAccessTokenDto } from './dto/refresh-access-token.dto';
@@ -31,8 +33,8 @@ export declare class UserService {
         data: any;
     }>;
     validateUser(data: UserLoginDto): Promise<User>;
-    private createAccessToken;
-    private createRefreshToken;
+    createAccessToken(data: CreateTokenDto): Promise<TokenResponseDto>;
+    createRefreshToken(data: CreateTokenDto): Promise<TokenResponseDto>;
     refreshAccessToken(data: RefreshAccessTokenDto): Promise<{
         statusCode: number;
         message: string;
@@ -40,4 +42,9 @@ export declare class UserService {
     }>;
     private validateToken;
     getUser(token: string): Promise<any>;
+    registerWithGoogle(email: string, name: string): Promise<{
+        statusCode: number;
+        message: string;
+        data: any;
+    }>;
 }

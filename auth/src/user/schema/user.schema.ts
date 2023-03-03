@@ -10,10 +10,13 @@ export class User {
   @Prop({ auto: true })
   id: string;
 
-  @Prop({ required: true, unique: true })
+  @Prop({ required: false, unique: true })
   userName: string;
 
-  @Prop({ required: true, minlength: 8 })
+  @Prop({ required: false, unique: true })
+  email: string;
+
+  @Prop({ required: false, minlength: 8 })
   password: string;
 
   @Prop({ required: true })
@@ -27,6 +30,9 @@ export class User {
 
   @Prop()
   refreshToken: string;
+
+  @Prop({ default: false })
+  isRegisterWithGoogle: boolean;
 
   @Prop({ default: RoleType.USER })
   role: string;

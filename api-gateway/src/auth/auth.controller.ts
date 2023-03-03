@@ -41,26 +41,26 @@ export class AuthController {
   }
 
   @Get('/google')
-  @UseGuards(AuthGuard('google'))
-  googleLogin(){
-    return 'Login by oauth2.0 google';
+  // @UseGuards(AuthGuard('google'))
+  googleLogin() {
+    return this.authService.googleLogin();
   }
 
   @Get('/google/callback')
-  @UseGuards(AuthGuard('google'))
+  // @UseGuards(AuthGuard('google'))
   googleAuthRedirect(@Req() req) {
     return this.authService.googleAuthRedirect(req.user);
   }
 
   @Get('/facebook')
   @UseGuards(AuthGuard('facebook'))
-  facebookLogin(){
+  facebookLogin() {
     return 'Login by oauth2.0 facebook';
   }
 
   @Get('/facebook/callback')
   @UseGuards(AuthGuard('facebook'))
-  facebookAuthRedirect(@Req() req){
+  facebookAuthRedirect(@Req() req) {
     console.log(`REQ: ${JSON.stringify(req.user)}`);
     return this.authService.facebookAuthRedirect(req.user);
   }

@@ -27,11 +27,13 @@ export type UserDocument = HydratedDocument<User>;
 export declare class User {
     id: string;
     userName: string;
+    email: string;
     password: string;
     firstName: string;
     lastName: string;
     phoneNumber: string;
     refreshToken: string;
+    isRegisterWithGoogle: boolean;
     role: string;
 }
 export declare const UserSchema: import("mongoose").Schema<User, import("mongoose").Model<User, any, any, any, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, User>;

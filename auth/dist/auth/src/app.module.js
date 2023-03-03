@@ -16,6 +16,7 @@ const app_service_1 = require("./app.service");
 const database_module_1 = require("./config/database/database.module");
 const google_strategy_1 = require("./strategy/google.strategy");
 const user_module_1 = require("./user/user.module");
+const oauth2_module_1 = require("./oauth2/oauth2.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -39,6 +40,7 @@ AppModule = __decorate([
             ]),
             database_module_1.DatabaseModule,
             user_module_1.UserModule,
+            oauth2_module_1.Oauth2Module,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService, google_strategy_1.GoogleStrategy],

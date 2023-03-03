@@ -35,7 +35,7 @@ let AuthController = class AuthController {
         return this.authService.refreshAccessToken(userId, refreshToken);
     }
     googleLogin() {
-        return 'Login by oauth2.0 google';
+        return this.authService.googleLogin();
     }
     googleAuthRedirect(req) {
         return this.authService.googleAuthRedirect(req.user);
@@ -78,14 +78,12 @@ __decorate([
 ], AuthController.prototype, "refreshAccessToken", null);
 __decorate([
     (0, common_1.Get)('/google'),
-    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('google')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "googleLogin", null);
 __decorate([
     (0, common_1.Get)('/google/callback'),
-    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('google')),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),

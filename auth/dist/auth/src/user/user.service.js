@@ -166,6 +166,18 @@ let UserService = class UserService {
             return 'Token expired';
         }
     }
+    async registerWithGoogle(email, name) {
+        const firstName = name.substring(name.lastIndexOf(" ") + 1);
+        const lastName = name.substring(name.lastIndexOf(" "), -1);
+        const newUser = await this.userModel.create({
+            email: email,
+            firstName,
+            lastName,
+            role: role_type_1.RoleType.USER,
+            isRegisterWithGoogle: true,
+        });
+        return index_1.SuccessResponse.from(newUser);
+    }
 };
 UserService = __decorate([
     (0, common_1.Injectable)(),

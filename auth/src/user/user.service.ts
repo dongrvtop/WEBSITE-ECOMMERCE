@@ -125,7 +125,7 @@ export class UserService {
     return null;
   }
 
-  private async createAccessToken(data: CreateTokenDto) {
+  async createAccessToken(data: CreateTokenDto) {
     data.type = TokenType.ACCESS_TOKEN;
     const accessToken = await this.jwtService.signAsync(data, {
       secret: this.configService.get('JWT_SECRET'),
@@ -137,7 +137,7 @@ export class UserService {
     });
   }
 
-  private async createRefreshToken(data: CreateTokenDto) {
+  async createRefreshToken(data: CreateTokenDto) {
     data.type = TokenType.REFRESH_TOKEN;
     const refreshToken = await this.jwtService.signAsync(data, {
       secret: this.configService.get('JWT_SECRET'),
@@ -197,4 +197,22 @@ export class UserService {
       return 'Token expired';
     }
   }
+
+  // Service for Google OAuth2
+  //#region 
+  async registerWithGoogle(email: string, name: string){
+    // const firstName = name.split(' ')[name.split(' ').length - 1];
+    // const lastName = name.split(' ', name.split(' ').length - 1).join(' ').trim();
+    const firstName = name.substring(name.lastIndexOf(" ") +1);
+    const lastName = name.substring(name.lastIndexOf(" "), -1);
+    const newUser = await this.userModel.create({
+      email: email,
+      firstName,
+      lastName,
+      role: RoleType.USER,
+      isRegisterWithGoogle: true,
+    });
+    return SuccessResponse.from(newUser);
+  }
+  //#region 
 }

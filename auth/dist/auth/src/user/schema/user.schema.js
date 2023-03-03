@@ -19,11 +19,15 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "id", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true, unique: true }),
+    (0, mongoose_1.Prop)({ required: false, unique: true }),
     __metadata("design:type", String)
 ], User.prototype, "userName", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true, minlength: 8 }),
+    (0, mongoose_1.Prop)({ required: false, unique: true }),
+    __metadata("design:type", String)
+], User.prototype, "email", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: false, minlength: 8 }),
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
 __decorate([
@@ -42,6 +46,10 @@ __decorate([
     (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
 ], User.prototype, "refreshToken", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ default: false }),
+    __metadata("design:type", Boolean)
+], User.prototype, "isRegisterWithGoogle", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ default: role_type_1.RoleType.USER }),
     __metadata("design:type", String)

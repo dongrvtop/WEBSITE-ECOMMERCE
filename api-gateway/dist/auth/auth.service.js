@@ -49,8 +49,11 @@ let AuthService = class AuthService {
             refreshToken,
         });
     }
+    async googleLogin() {
+        return this.authClient.emit(auth_microserivce_pattern_1.AuthPattern.OAUTH2_GOOGLE_LOGIN, 'null');
+    }
     async googleAuthRedirect(user) {
-        return this.authClient.send(auth_microserivce_pattern_1.AuthPattern.OAUTH2_GOOGLE_LOGIN, user);
+        return user;
     }
     async facebookAuthRedirect(user) {
         return this.authClient.send(auth_microserivce_pattern_1.AuthPattern.OAUTH2_FACEBOOK_LOGIN, user);
