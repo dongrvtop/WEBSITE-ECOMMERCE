@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserSchema = exports.User = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
 const role_type_1 = require("../../constants/role-type");
+const user_provider_1 = require("../enum/user-provider");
 let User = class User {
 };
 __decorate([
@@ -27,15 +28,23 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "email", void 0);
 __decorate([
+    (0, mongoose_1.Prop)({ required: false, unique: true }),
+    __metadata("design:type", String)
+], User.prototype, "googleId", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: false, unique: true }),
+    __metadata("design:type", String)
+], User.prototype, "facebookId", void 0);
+__decorate([
     (0, mongoose_1.Prop)({ required: false, minlength: 8 }),
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true }),
+    (0, mongoose_1.Prop)({ required: false }),
     __metadata("design:type", String)
 ], User.prototype, "firstName", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true }),
+    (0, mongoose_1.Prop)({ required: false }),
     __metadata("design:type", String)
 ], User.prototype, "lastName", void 0);
 __decorate([
@@ -43,17 +52,33 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "phoneNumber", void 0);
 __decorate([
+    (0, mongoose_1.Prop)({ required: false }),
+    __metadata("design:type", String)
+], User.prototype, "gender", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    __metadata("design:type", String)
+], User.prototype, "facebookProfileUrl", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    __metadata("design:type", String)
+], User.prototype, "avatarUrl", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    __metadata("design:type", Date)
+], User.prototype, "birthday", void 0);
+__decorate([
     (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
 ], User.prototype, "refreshToken", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ default: false }),
-    __metadata("design:type", Boolean)
-], User.prototype, "isRegisterWithGoogle", void 0);
-__decorate([
     (0, mongoose_1.Prop)({ default: role_type_1.RoleType.USER }),
     __metadata("design:type", String)
 ], User.prototype, "role", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ default: user_provider_1.UserProvider.NORMAL }),
+    __metadata("design:type", String)
+], User.prototype, "provider", void 0);
 User = __decorate([
     (0, mongoose_1.Schema)()
 ], User);

@@ -52,12 +52,12 @@ export class AuthService implements OnModuleInit, OnModuleDestroy {
   }
 
   async googleLogin() {
-    return this.authClient.emit(AuthPattern.OAUTH2_GOOGLE_LOGIN, 'null');
+    // return this.authClient.emit(AuthPattern.OAUTH2_GOOGLE_LOGIN, 'null');
   }
 
   async googleAuthRedirect(user: any) {
-    return user;
-    // return this.authClient.send(AuthPattern.OAUTH2_GOOGLE_LOGIN, user.token);
+    // return user;
+    return this.authClient.send(AuthPattern.OAUTH2_GOOGLE_LOGIN, user);
   }
 
   async facebookAuthRedirect(user: any) {

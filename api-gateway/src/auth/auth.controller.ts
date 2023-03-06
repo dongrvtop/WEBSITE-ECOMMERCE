@@ -7,6 +7,8 @@ import {
   Req,
   UseGuards,
   Request,
+  Redirect,
+  Res,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -14,6 +16,7 @@ import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserLoginDto } from './dto/user-login-dto';
+import { Response } from 'express';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -41,14 +44,17 @@ export class AuthController {
   }
 
   @Get('/google')
-  // @UseGuards(AuthGuard('google'))
-  googleLogin() {
+  // @Redirect('http://localhost:3000/auth/google')
+  @UseGuards(AuthGuard('google'))
+  googleLogin(@Res() res: Response) {
+    return res.redirect('http://localhost:3000/auth/google');
     return this.authService.googleLogin();
   }
-
   @Get('/google/callback')
-  // @UseGuards(AuthGuard('google'))
+  @UseGuards(AuthGuard('google'))
   googleAuthRedirect(@Req() req) {
+    console.log('AAAAAAAAAAAAAAAA');
+
     return this.authService.googleAuthRedirect(req.user);
   }
 
@@ -61,7 +67,6 @@ export class AuthController {
   @Get('/facebook/callback')
   @UseGuards(AuthGuard('facebook'))
   facebookAuthRedirect(@Req() req) {
-    console.log(`REQ: ${JSON.stringify(req.user)}`);
     return this.authService.facebookAuthRedirect(req.user);
   }
 

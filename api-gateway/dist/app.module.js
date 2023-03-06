@@ -8,6 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
+const config_1 = require("@nestjs/config");
 const core_1 = require("@nestjs/core");
 const jwt_1 = require("@nestjs/jwt");
 const app_controller_1 = require("./app.controller");
@@ -27,11 +28,16 @@ AppModule = __decorate([
                 secret: jwt_constants_1.jwtConstants.secret,
                 signOptions: {
                     expiresIn: '14d',
-                }
+                },
             }),
+            config_1.ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
         ],
         controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService, index_1.GoogleStrategy, index_1.FacebookStrategy, {
+        providers: [
+            app_service_1.AppService,
+            index_1.GoogleStrategy,
+            index_1.FacebookStrategy,
+            {
                 provide: core_1.APP_GUARD,
                 useClass: guards_1.RolesGuard,
             },

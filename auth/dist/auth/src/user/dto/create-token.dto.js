@@ -22,6 +22,10 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
+], CreateTokenDto.prototype, "email", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
 ], CreateTokenDto.prototype, "role", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),

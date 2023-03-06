@@ -37,7 +37,8 @@ let UserController = class UserController {
         return response;
     }
     async googleAuthRedirect(user) {
-        return this.userService.googleLogin(user.accessToken);
+        console.log('TTTTTTTTTTTTTTTTTTTTTTTT');
+        return this.userService.loginWithGoogle(user);
     }
     async facebookAuthRedirect(user) {
         return this.userService.facebookLogin(user);

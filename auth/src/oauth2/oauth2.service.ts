@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Auth, google } from 'googleapis';
 import { Model } from 'mongoose';
-import { RoleType } from 'src/constants/role-type';
+import { ConfigService } from '@nestjs/config';
 import { CreateTokenDto } from 'src/user/dto/create-token.dto';
 import { UserDocument } from 'src/user/schema/user.schema';
 import { UserService } from 'src/user/user.service';
@@ -13,21 +13,26 @@ export class Oauth2Service {
   oauthGoogleClient: Auth.OAuth2Client;
   constructor(
     private readonly userService: UserService,
+    private readonly configService: ConfigService,
     @InjectModel('User') private readonly userModel: Model<UserDocument>,
   ) {
-    const googleClientID =
-      '202494894639-ln5u34p2ir4ca0nnqo202gok7s6v4mln.apps.googleusercontent.com';
-    const googleClientSecret = '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';
-    const googleRedirectURI = 'localhost:3000/auth/google/callback';
+    // const googleClientID =
+    //   '202494894639-ln5u34p2ir4ca0nnqo202gok7s6v4mln.apps.googleusercontent.com';
+    // const googleClientSecret = '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';
+    // const googleRedirectURI = 'http://localhost:3000/auth/google/callback';
 
     this.oauthGoogleClient = new google.auth.OAuth2({
-      clientId: googleClientID,
-      clientSecret: googleClientSecret,
-      redirectUri: googleRedirectURI,
+      clientId: configService.get('googleClientID'),
+      clientSecret: configService.get('googleClientSecret'),
+      redirectUri: configService.get('googleRedirectURI'),
     });
   }
 
-  async authenticate() {
+  // async testToken(){
+  //   await this.oauthGoogleClient.verifyIdToken
+  // }
+
+  async authenticate(accessToken: string) {
     const scopes = [
       'https://www.googleapis.com/auth/contacts.readonly',
       'https://www.googleapis.com/auth/user.emails.read',
@@ -37,7 +42,6 @@ export class Oauth2Service {
       access_type: 'offline',
       scope: scopes.join(' '),
     });
-    console.log(`URL: ${JSON.stringify(authorizeUrl)}`);
     console.log(`URL: ${authorizeUrl}`);
     return authorizeUrl;
     // const tokenInfo = await this.oauthGoogleClient.getTokenInfo(accessToken);
@@ -77,42 +81,42 @@ export class Oauth2Service {
     // }
   }
 
-  async registerUserByGoogle(token: string, email: string) {
-    const userData = await this.getUserDataByGoogleToken(token);
-    const name = userData.name;
+  // async registerUserByGoogle(token: string, email: string) {
+  //   const userData = await this.getUserDataByGoogleToken(token);
+  //   const name = userData.name;
 
-    const responseRegister = await this.userService.registerWithGoogle(
-      email,
-      name,
-    );
-    const payloadCreateToken: CreateTokenDto = {
-      userId: responseRegister.data.id,
-      role: responseRegister.data.role,
-    };
-    const accessToken = await this.userService.createAccessToken(
-      payloadCreateToken,
-    );
-    const refreshToken = await this.userService.createRefreshToken(
-      payloadCreateToken,
-    );
-    return SuccessResponse.from({
-      user: responseRegister.data,
-      accessToken,
-      refreshToken,
-    });
-  }
+  //   const responseRegister = await this.userService.registerWithGoogle(
+  //     email,
+  //     name,
+  //   );
+  //   const payloadCreateToken: CreateTokenDto = {
+  //     userId: responseRegister.data.id,
+  //     role: responseRegister.data.role,
+  //   };
+  //   const accessToken = await this.userService.createAccessToken(
+  //     payloadCreateToken,
+  //   );
+  //   const refreshToken = await this.userService.createRefreshToken(
+  //     payloadCreateToken,
+  //   );
+  //   return SuccessResponse.from({
+  //     user: responseRegister.data,
+  //     accessToken,
+  //     refreshToken,
+  //   });
+  // }
 
-  async getUserDataByGoogleToken(token: string) {
-    const userInfoClient = google.oauth2('v2').userinfo;
+  // async getUserDataByGoogleToken(token: string) {
+  //   const userInfoClient = google.oauth2('v2').userinfo;
 
-    this.oauthGoogleClient.setCredentials({
-      access_token: token,
-    });
+  //   this.oauthGoogleClient.setCredentials({
+  //     access_token: token,
+  //   });
 
-    const userInfoResponse = await userInfoClient.get({
-      auth: this.oauthGoogleClient,
-    });
+  //   const userInfoResponse = await userInfoClient.get({
+  //     auth: this.oauthGoogleClient,
+  //   });
 
-    return userInfoResponse.data;
-  }
+  //   return userInfoResponse.data;
+  // }
 }

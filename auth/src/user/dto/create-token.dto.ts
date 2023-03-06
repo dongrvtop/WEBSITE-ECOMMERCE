@@ -4,7 +4,10 @@ import { TokenType } from 'src/constants/token-type';
 
 export class CreateTokenDto {
   @ApiProperty()
-  userId: string;
+  userId?: string;
+
+  @ApiProperty()
+  email?: string;
 
   @ApiProperty()
   role: RoleType;

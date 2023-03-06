@@ -28,12 +28,18 @@ export declare class User {
     id: string;
     userName: string;
     email: string;
+    googleId: string;
+    facebookId: string;
     password: string;
     firstName: string;
     lastName: string;
     phoneNumber: string;
+    gender: string;
+    facebookProfileUrl: string;
+    avatarUrl: string;
+    birthday: Date;
     refreshToken: string;
-    isRegisterWithGoogle: boolean;
     role: string;
+    provider: string;
 }
 export declare const UserSchema: import("mongoose").Schema<User, import("mongoose").Model<User, any, any, any, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, User>;

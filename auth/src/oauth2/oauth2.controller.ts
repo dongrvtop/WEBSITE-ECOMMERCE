@@ -5,9 +5,9 @@ import { Oauth2Service } from './oauth2.service';
 
 @Controller('oauth2')
 export class Oauth2Controller {
-  constructor(private readonly oauth2Service: Oauth2Service) {}
-  @MessagePattern(UserMessages.OAUTH2_GOOGLE_LOGIN)
-  async googleAuthRedirect(@Payload(ValidationPipe) token) {
-    return this.oauth2Service.authenticate();
-  }
+  // constructor(private readonly oauth2Service: Oauth2Service) {}
+  // @MessagePattern(UserMessages.OAUTH2_GOOGLE_LOGIN)
+  // async googleAuthRedirect(@Payload(ValidationPipe) token) {
+  //   return this.oauth2Service.authenticate(token);
+  // }
 }

@@ -32,6 +32,7 @@ Oauth2Module = __decorate([
         ],
         controllers: [oauth2_controller_1.Oauth2Controller],
         providers: [oauth2_service_1.Oauth2Service],
+        exports: [oauth2_service_1.Oauth2Service],
     })
 ], Oauth2Module);
 exports.Oauth2Module = Oauth2Module;

@@ -18,24 +18,40 @@ let FacebookStrategy = class FacebookStrategy extends (0, passport_1.PassportStr
         super({
             clientID: '982751452687664',
             clientSecret: 'fd484db9c14ba320fa871ee9d93c1916',
-            callbackURL: "http://localhost:3000/auth/facebook/callback",
-            profileFields: ['id', 'displayName', 'photos', 'email', 'birthday'],
-            scope: ['public_profile', 'user_birthday', 'user_photos'],
+            callbackURL: 'http://localhost:3000/auth/facebook/callback',
+            profileFields: [
+                'id',
+                'name',
+                'gender',
+                'profileUrl',
+                'displayName',
+                'photos',
+                'emails',
+                'birthday',
+            ],
+            scope: [
+                'public_profile',
+                'user_birthday',
+                'user_photos',
+                'user_gender',
+                'user_link',
+                'email',
+            ],
         });
     }
     async validate(accessToken, refreshToken, profileFields, done) {
-        const { id, displayName, email, photos, birthday } = profileFields;
+        const { id, displayName, name, gender, profileUrl, emails, photos } = profileFields;
         const user = {
-            facebookUserId: id,
-            email: email,
-            firstName: displayName,
-            lastName: displayName,
-            picture: photos[0],
-            birthday,
+            facebookId: id,
+            email: profileFields._json.email,
+            name: name,
+            displayName,
+            gender: gender,
+            profileUrl,
+            picture: photos[0].value,
+            birthday: profileFields._json.birthday,
             accessToken,
-            refreshToken,
         };
-        console.log(`USER: ${JSON.stringify(user)}`);
         done(null, user);
     }
 };

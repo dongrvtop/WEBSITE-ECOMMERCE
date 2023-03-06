@@ -17,22 +17,20 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const googleapis_1 = require("googleapis");
 const mongoose_2 = require("mongoose");
+const config_1 = require("@nestjs/config");
 const user_service_1 = require("../user/user.service");
-const helpers_1 = require("../../../common/helpers");
 let Oauth2Service = class Oauth2Service {
-    constructor(userService, userModel) {
+    constructor(userService, configService, userModel) {
         this.userService = userService;
+        this.configService = configService;
         this.userModel = userModel;
-        const googleClientID = '202494894639-ln5u34p2ir4ca0nnqo202gok7s6v4mln.apps.googleusercontent.com';
-        const googleClientSecret = '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';
-        const googleRedirectURI = 'localhost:3000/auth/google/callback';
         this.oauthGoogleClient = new googleapis_1.google.auth.OAuth2({
-            clientId: googleClientID,
-            clientSecret: googleClientSecret,
-            redirectUri: googleRedirectURI,
+            clientId: configService.get('googleClientID'),
+            clientSecret: configService.get('googleClientSecret'),
+            redirectUri: configService.get('googleRedirectURI'),
         });
     }
-    async authenticate() {
+    async authenticate(accessToken) {
         const scopes = [
             'https://www.googleapis.com/auth/contacts.readonly',
             'https://www.googleapis.com/auth/user.emails.read',
@@ -42,41 +40,15 @@ let Oauth2Service = class Oauth2Service {
             access_type: 'offline',
             scope: scopes.join(' '),
         });
-        console.log(`URL: ${JSON.stringify(authorizeUrl)}`);
         console.log(`URL: ${authorizeUrl}`);
         return authorizeUrl;
-    }
-    async registerUserByGoogle(token, email) {
-        const userData = await this.getUserDataByGoogleToken(token);
-        const name = userData.name;
-        const responseRegister = await this.userService.registerWithGoogle(email, name);
-        const payloadCreateToken = {
-            userId: responseRegister.data.id,
-            role: responseRegister.data.role,
-        };
-        const accessToken = await this.userService.createAccessToken(payloadCreateToken);
-        const refreshToken = await this.userService.createRefreshToken(payloadCreateToken);
-        return helpers_1.SuccessResponse.from({
-            user: responseRegister.data,
-            accessToken,
-            refreshToken,
-        });
-    }
-    async getUserDataByGoogleToken(token) {
-        const userInfoClient = googleapis_1.google.oauth2('v2').userinfo;
-        this.oauthGoogleClient.setCredentials({
-            access_token: token,
-        });
-        const userInfoResponse = await userInfoClient.get({
-            auth: this.oauthGoogleClient,
-        });
-        return userInfoResponse.data;
     }
 };
 Oauth2Service = __decorate([
     (0, common_1.Injectable)(),
-    __param(1, (0, mongoose_1.InjectModel)('User')),
+    __param(2, (0, mongoose_1.InjectModel)('User')),
     __metadata("design:paramtypes", [user_service_1.UserService,
+        config_1.ConfigService,
         mongoose_2.Model])
 ], Oauth2Service);
 exports.Oauth2Service = Oauth2Service;
