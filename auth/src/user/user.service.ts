@@ -168,34 +168,40 @@ export class UserService {
   }
 
   async refreshAccessToken(data: RefreshAccessTokenDto) {
-    const isRefreshTokenExpired = !(await this.validateToken(
-      data.refreshToken,
-    ));
-    if (isRefreshTokenExpired) {
-      return SuccessResponse.from(
-        null,
-        StatusCode.BAD_REQUEST,
-        'Refresh token has expired',
+    try {
+      const isRefreshTokenExpired = !(await this.validateToken(
+        data.refreshToken,
+      ));
+      if (isRefreshTokenExpired) {
+        return SuccessResponse.from(
+          null,
+          StatusCode.BAD_REQUEST,
+          'Refresh token has expired',
+        );
+      }
+      const user = await this.userModel.findById(data.userId).exec();
+      if (data.refreshToken !== user.refreshToken) {
+        return SuccessResponse.from(
+          null,
+          StatusCode.BAD_REQUEST,
+          'Refresh token incorrect',
+        );
+      }
+      const createAccessTokenPayload: CreateTokenDto = {
+        userId: user.id,
+        role: (user.role as RoleType) ?? RoleType.USER,
+      };
+      const accessToken = await this.createAccessToken(
+        createAccessTokenPayload,
       );
+      const response = {
+        user,
+        accessToken,
+      };
+      return SuccessResponse.from(response);
+    } catch (error) {
+      return SuccessResponse.from(null, StatusCode.FOR_BIDDEN, error.message);
     }
-    const user = await this.userModel.findById(data.userId).exec();
-    if (data.refreshToken !== user.refreshToken) {
-      return SuccessResponse.from(
-        null,
-        StatusCode.BAD_REQUEST,
-        'Refresh token incorrect',
-      );
-    }
-    const createAccessTokenPayload: CreateTokenDto = {
-      userId: user.id,
-      role: (user.role as RoleType) ?? RoleType.USER,
-    };
-    const accessToken = await this.createAccessToken(createAccessTokenPayload);
-    const response = {
-      user,
-      accessToken,
-    };
-    return SuccessResponse.from(response);
   }
 
   private async validateToken(token: string) {
@@ -223,74 +229,106 @@ export class UserService {
   async registerWithGoogle(user: CreateUserWithGoogle) {
     // const firstName = name.substring(name.lastIndexOf(" ") +1);
     // const lastName = name.substring(name.lastIndexOf(" "), -1);
-    const newUser = await this.userModel.create({
-      email: user.email,
-      googleId: user.googleId,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      role: RoleType.USER,
-      avatarUrl: user.avatarUrl,
-      provider: UserProvider.GOOGLE,
-    });
-    const createTokenPayload: CreateTokenDto = {
-      email: newUser.email,
-      type: TokenType.ACCESS_TOKEN,
-      role: RoleType.USER,
-    };
-    const accessToken = await this.createAccessToken(
-      createTokenPayload,
-      UserType.WITH_GOOGLE,
-    );
-    const refreshToken = await this.createRefreshToken(createTokenPayload);
-    await this.userModel.findByIdAndUpdate(newUser.id, {
-      $set: { refreshToken: refreshToken.token },
-    });
-    const response = {
-      accessToken,
-      refreshToken,
-      user: newUser,
-    };
-    return SuccessResponse.from(response);
+    try {
+      const existUser = await this.validateUserByEmail(user.email);
+      const newUser = await this.userModel.create({
+        email: user.email,
+        googleId: user.googleId,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: RoleType.USER,
+        avatarUrl: user.avatarUrl,
+        provider: [UserProvider.GOOGLE],
+      });
+      const createTokenPayload: CreateTokenDto = {
+        email: newUser.email,
+        type: TokenType.ACCESS_TOKEN,
+        role: RoleType.USER,
+      };
+      const accessToken = await this.createAccessToken(
+        createTokenPayload,
+        UserType.WITH_GOOGLE,
+      );
+      const refreshToken = await this.createRefreshToken(createTokenPayload);
+      await this.userModel.findOneAndUpdate(
+        { email: user.email },
+        {
+          $set: { refreshToken: refreshToken.token },
+        },
+      );
+      const dataUser = await this.userModel.findOne({ email: user.email });
+      const response = {
+        accessToken,
+        refreshToken,
+        user: dataUser,
+      };
+      return SuccessResponse.from(response);
+    } catch (error) {
+      return SuccessResponse.from(null, StatusCode.FOR_BIDDEN, error.message);
+    }
   }
 
   async loginWithGoogle(user: CreateUserWithGoogle) {
-    const validateUser = await this.validateUserByEmail(
-      user.email,
-      UserProvider.GOOGLE,
-    );
-    let newUser;
-    if (!validateUser) {
-      return await this.registerWithGoogle(user);
-    } else {
-      newUser = validateUser;
+    try {
+      const validateUser = await this.validateUserByEmail(user.email);
+      let newUser;
+      if (!validateUser) {
+        return await this.registerWithGoogle(user);
+      } else {
+        if (!validateUser.provider.includes(UserProvider.GOOGLE)) {
+          const provider: string[] = validateUser.provider;
+          provider.push(UserProvider.GOOGLE);
+          newUser = await this.userModel
+            .findOneAndUpdate(
+              { email: user.email },
+              {
+                $set: {
+                  googleId: user.googleId,
+                  provider: provider,
+                },
+              },
+            )
+            .exec();
+        } else {
+          newUser = validateUser;
+        }
+      }
+      const createTokenPayload: CreateTokenDto = {
+        email: newUser.email,
+        type: TokenType.ACCESS_TOKEN,
+        role: RoleType.USER,
+      };
+      const accessToken = await this.createAccessToken(
+        createTokenPayload,
+        UserType.WITH_GOOGLE,
+      );
+      const refreshToken = await this.createRefreshToken(createTokenPayload);
+      await this.userModel.findOneAndUpdate(
+        { email: user.email },
+        {
+          $set: { refreshToken: refreshToken.token },
+        },
+      );
+      const dataUser = await this.userModel
+        .findOne({
+          email: user.email,
+        })
+        .exec();
+      const response = {
+        accessToken,
+        refreshToken,
+        user: dataUser,
+      };
+      return SuccessResponse.from(response);
+    } catch (error) {
+      return SuccessResponse.from(null, StatusCode.FOR_BIDDEN, error.message);
     }
-    console.log('LOGIN', validateUser);
-    const createTokenPayload: CreateTokenDto = {
-      email: newUser.email,
-      type: TokenType.ACCESS_TOKEN,
-      role: RoleType.USER,
-    };
-    const accessToken = await this.createAccessToken(
-      createTokenPayload,
-      UserType.WITH_GOOGLE,
-    );
-    const refreshToken = await this.createRefreshToken(createTokenPayload);
-    await this.userModel.findByIdAndUpdate(newUser.id, {
-      $set: { refreshToken: refreshToken.token },
-    });
-    const response = {
-      accessToken,
-      refreshToken,
-      user: newUser,
-    };
-    return SuccessResponse.from(response);
   }
 
-  async validateUserByEmail(email: string, provider: UserProvider) {
+  async validateUserByEmail(email: string) {
     const user = await this.userModel
       .findOne({
         email,
-        provider,
       })
       .exec();
     if (!user || !email) {
@@ -305,47 +343,71 @@ export class UserService {
   async registerWithFacebook(user: CreateUserWithFacebook) {
     // const firstName = name.substring(name.lastIndexOf(" ") +1);
     // const lastName = name.substring(name.lastIndexOf(" "), -1);
-    const newUser = await this.userModel.create({
-      email: user.email,
-      facebookId: user.facebookId,
-      firstName: user.name.substring(user.name.lastIndexOf(' ') + 1),
-      lastName: user.name.substring(user.name.lastIndexOf(' '), -1),
-      role: RoleType.USER,
-      avatarUrl: user.avatarUrl,
-      birthday: user.birthday,
-      provider: UserProvider.FACEBOOK,
-    });
-    const createTokenPayload: CreateTokenDto = {
-      email: newUser.email,
-      type: TokenType.ACCESS_TOKEN,
-      role: RoleType.USER,
-    };
-    const accessToken = await this.createAccessToken(
-      createTokenPayload,
-      UserType.WITH_FACEBOOK,
-    );
-    const refreshToken = await this.createRefreshToken(createTokenPayload);
-    await this.userModel.findByIdAndUpdate(newUser.id, {
-      $set: { refreshToken: refreshToken.token },
-    });
-    const response = {
-      accessToken,
-      refreshToken,
-      user: newUser,
-    };
-    return SuccessResponse.from(response);
+    try {
+      const newUser = await this.userModel.create({
+        email: user.email,
+        facebookId: user.facebookId,
+        firstName: user.name.substring(user.name.lastIndexOf(' ') + 1),
+        lastName: user.name.substring(user.name.lastIndexOf(' '), -1),
+        role: RoleType.USER,
+        avatarUrl: user.avatarUrl,
+        birthday: user.birthday,
+        provider: UserProvider.FACEBOOK,
+      });
+      const createTokenPayload: CreateTokenDto = {
+        email: newUser.email,
+        type: TokenType.ACCESS_TOKEN,
+        role: RoleType.USER,
+      };
+      const accessToken = await this.createAccessToken(
+        createTokenPayload,
+        UserType.WITH_FACEBOOK,
+      );
+      const refreshToken = await this.createRefreshToken(createTokenPayload);
+      await this.userModel.findOneAndUpdate(
+        { email: user.email },
+        {
+          $set: { refreshToken: refreshToken.token },
+        },
+      );
+      const dataUser = await this.userModel.findOne({ email: user.email });
+      const response = {
+        accessToken,
+        refreshToken,
+        user: dataUser,
+      };
+      return SuccessResponse.from(response);
+    } catch (error) {
+      return SuccessResponse.from(null, StatusCode.FOR_BIDDEN, error.messsage);
+    }
   }
 
   async loginWithFacebook(user: CreateUserWithFacebook) {
-    const validateUser = await this.validateUserByEmail(
-      user.email,
-      UserProvider.FACEBOOK,
-    );
+    const validateUser = await this.validateUserByEmail(user.email);
     let newUser;
     if (!validateUser) {
       return await this.registerWithFacebook(user);
     } else {
-      newUser = validateUser;
+      if (!validateUser.provider.includes(UserProvider.FACEBOOK)) {
+        const provider: string[] = validateUser.provider;
+        provider.push(UserProvider.FACEBOOK);
+        newUser = await this.userModel
+          .findOneAndUpdate(
+            { email: user.email },
+            {
+              $set: {
+                facebookId: user.facebookId,
+                birthday: user.birthday,
+                gender: user.gender,
+                facebookProfileUrl: user.profileUrl,
+                provider: provider,
+              },
+            },
+          )
+          .exec();
+      } else {
+        newUser = validateUser;
+      }
     }
     const createTokenPayload: CreateTokenDto = {
       email: newUser.email,
@@ -357,13 +419,19 @@ export class UserService {
       UserType.WITH_FACEBOOK,
     );
     const refreshToken = await this.createRefreshToken(createTokenPayload);
-    await this.userModel.findByIdAndUpdate(newUser.id, {
-      $set: { refreshToken: refreshToken.token },
+    await this.userModel.findOneAndUpdate(
+      { email: user.email },
+      {
+        $set: { refreshToken: refreshToken.token },
+      },
+    );
+    const dataUser = await this.userModel.findOne({
+      email: user.email,
     });
     const response = {
       accessToken,
       refreshToken,
-      user: newUser,
+      user: dataUser,
     };
     return SuccessResponse.from(response);
   }

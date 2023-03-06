@@ -40,6 +40,6 @@ export declare class User {
     birthday: Date;
     refreshToken: string;
     role: string;
-    provider: string;
+    provider: string[];
 }
 export declare const UserSchema: import("mongoose").Schema<User, import("mongoose").Model<User, any, any, any, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, User>;

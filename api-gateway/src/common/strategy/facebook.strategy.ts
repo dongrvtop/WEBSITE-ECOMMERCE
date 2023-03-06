@@ -21,7 +21,6 @@ export class FacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
         'emails',
         'birthday',
       ],
-      // scope: ['user_friends', 'manage_pages'],
       scope: [
         'public_profile',
         'user_birthday',
@@ -39,16 +38,15 @@ export class FacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
     profileFields: any,
     done: VerifiedCallback,
   ): Promise<any> {
-    const { id, displayName, name, gender, profileUrl, emails, photos } =
+    const { id, displayName, gender, profileUrl, emails, photos } =
       profileFields;
     const user = {
       facebookId: id,
       email: profileFields._json.email,
-      name: name,
-      displayName,
+      name: displayName,
       gender: gender,
       profileUrl,
-      picture: photos[0].value,
+      avatarUrl: photos[0].value,
       birthday: profileFields._json.birthday,
       accessToken,
     };

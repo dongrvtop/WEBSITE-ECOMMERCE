@@ -1,5 +1,4 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { classToPlain, Exclude } from 'class-transformer';
 import { HydratedDocument } from 'mongoose';
 import { RoleType } from 'src/constants/role-type';
 import { UserProvider } from '../enum/user-provider';
@@ -53,8 +52,8 @@ export class User {
   @Prop({ default: RoleType.USER })
   role: string;
 
-  @Prop({ default: UserProvider.NORMAL })
-  provider: string;
+  @Prop({ default: [UserProvider.NORMAL] })
+  provider: string[];
 }
 
 // export const UserSchema = SchemaFactory.createForClass(User);

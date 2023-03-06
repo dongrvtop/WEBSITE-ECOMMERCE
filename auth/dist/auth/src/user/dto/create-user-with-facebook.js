@@ -48,6 +48,10 @@ __decorate([
     __metadata("design:type", Date)
 ], CreateUserWithFacebook.prototype, "birthday", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], CreateUserWithFacebook.prototype, "profileUrl", void 0);
+__decorate([
     (0, swagger_1.ApiProperty)({ default: role_type_1.RoleType.USER }),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)

@@ -29,6 +29,9 @@ export class CreateUserWithFacebook {
   @IsString()
   birthday: Date;
 
+  @ApiProperty()
+  profileUrl: string;
+
   @ApiProperty({ default: RoleType.USER })
   @IsString()
   role: string;

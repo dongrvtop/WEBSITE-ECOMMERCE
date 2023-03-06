@@ -33,7 +33,6 @@ import { ConfigService } from '@nestjs/config';
 import { RefreshAccessTokenDto } from './dto/refresh-access-token.dto';
 import { CreateUserWithGoogle } from './dto/create-user-with-google.dto';
 import { UserType } from './enum/user-type';
-import { UserProvider } from './enum/user-provider';
 import { CreateUserWithFacebook } from './dto/create-user-with-facebook';
 export declare class UserService {
     private readonly userModel;
@@ -80,7 +79,7 @@ export declare class UserService {
         message: string;
         data: any;
     }>;
-    validateUserByEmail(email: string, provider: UserProvider): Promise<import("mongoose").Document<unknown, any, User> & Omit<User & {
+    validateUserByEmail(email: string): Promise<import("mongoose").Document<unknown, any, User> & Omit<User & {
         _id: import("mongoose").Types.ObjectId;
     }, never> & Required<{
         _id: import("mongoose").Types.ObjectId;

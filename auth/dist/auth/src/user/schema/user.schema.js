@@ -76,8 +76,8 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "role", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ default: user_provider_1.UserProvider.NORMAL }),
-    __metadata("design:type", String)
+    (0, mongoose_1.Prop)({ default: [user_provider_1.UserProvider.NORMAL] }),
+    __metadata("design:type", Array)
 ], User.prototype, "provider", void 0);
 User = __decorate([
     (0, mongoose_1.Schema)()

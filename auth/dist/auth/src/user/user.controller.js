@@ -37,11 +37,10 @@ let UserController = class UserController {
         return response;
     }
     async googleAuthRedirect(user) {
-        console.log('TTTTTTTTTTTTTTTTTTTTTTTT');
         return this.userService.loginWithGoogle(user);
     }
     async facebookAuthRedirect(user) {
-        return this.userService.facebookLogin(user);
+        return this.userService.loginWithFacebook(user);
     }
     getUser(data) {
         const { token } = data;

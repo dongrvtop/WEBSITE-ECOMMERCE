@@ -39,7 +39,6 @@ let AuthController = class AuthController {
         return this.authService.googleLogin();
     }
     googleAuthRedirect(req) {
-        console.log('AAAAAAAAAAAAAAAA');
         return this.authService.googleAuthRedirect(req.user);
     }
     facebookLogin() {

@@ -9,7 +9,6 @@ import { AppService } from './app.service';
 import { DatabaseModule } from './config/database/database.module';
 import { GoogleStrategy } from './strategy/google.strategy';
 import { UserModule } from './user/user.module';
-import { Oauth2Module } from './oauth2/oauth2.module';
 
 @Module({
   imports: [
@@ -31,7 +30,6 @@ import { Oauth2Module } from './oauth2/oauth2.module';
     ]),
     DatabaseModule,
     UserModule,
-    Oauth2Module,
   ],
   controllers: [AppController],
   providers: [AppService, GoogleStrategy],

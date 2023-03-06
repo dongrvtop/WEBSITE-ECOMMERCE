@@ -40,15 +40,14 @@ let FacebookStrategy = class FacebookStrategy extends (0, passport_1.PassportStr
         });
     }
     async validate(accessToken, refreshToken, profileFields, done) {
-        const { id, displayName, name, gender, profileUrl, emails, photos } = profileFields;
+        const { id, displayName, gender, profileUrl, emails, photos } = profileFields;
         const user = {
             facebookId: id,
             email: profileFields._json.email,
-            name: name,
-            displayName,
+            name: displayName,
             gender: gender,
             profileUrl,
-            picture: photos[0].value,
+            avatarUrl: photos[0].value,
             birthday: profileFields._json.birthday,
             accessToken,
         };

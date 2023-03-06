@@ -5,5 +5,6 @@ export declare class CreateUserWithFacebook {
     avatarUrl: string;
     gender: string;
     birthday: Date;
+    profileUrl: string;
     role: string;
 }
