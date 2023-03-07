@@ -7,7 +7,6 @@ import { env } from 'process';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './config/database/database.module';
-import { GoogleStrategy } from './strategy/google.strategy';
 import { UserModule } from './user/user.module';
 
 @Module({
@@ -32,6 +31,6 @@ import { UserModule } from './user/user.module';
     UserModule,
   ],
   controllers: [AppController],
-  providers: [AppService, GoogleStrategy],
+  providers: [AppService],
 })
 export class AppModule {}

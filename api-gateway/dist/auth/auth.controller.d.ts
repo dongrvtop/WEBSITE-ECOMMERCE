@@ -7,7 +7,7 @@ export declare class AuthController {
     constructor(authService: AuthService);
     createUser(data: CreateUserDto): Promise<import("rxjs").Observable<any>>;
     login(data: UserLoginDto): Promise<import("rxjs").Observable<any>>;
-    refreshAccessToken(userId: string, refreshToken: string): Promise<import("rxjs").Observable<any>>;
+    refreshAccessToken(refreshToken: string): Promise<import("rxjs").Observable<any>>;
     googleLogin(res: Response): void | Promise<void>;
     googleAuthRedirect(req: any): Promise<import("rxjs").Observable<any>>;
     facebookLogin(): string;

@@ -28,11 +28,10 @@ let AuthController = class AuthController {
         return this.authService.createUser(data);
     }
     login(data) {
-        console.log(`bbbbbbbbbbbbbbbbbbbb`);
         return this.authService.login(data);
     }
-    refreshAccessToken(userId, refreshToken) {
-        return this.authService.refreshAccessToken(userId, refreshToken);
+    refreshAccessToken(refreshToken) {
+        return this.authService.refreshAccessToken(refreshToken);
     }
     googleLogin(res) {
         return res.redirect('http://localhost:3000/auth/google');
@@ -70,10 +69,9 @@ __decorate([
 ], AuthController.prototype, "login", null);
 __decorate([
     (0, common_1.Post)('/refresh-token'),
-    __param(0, (0, common_1.Query)('userId')),
-    __param(1, (0, common_1.Query)('refreshToken')),
+    __param(0, (0, common_1.Query)('refreshToken')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "refreshAccessToken", null);
 __decorate([

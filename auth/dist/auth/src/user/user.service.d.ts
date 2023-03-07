@@ -59,7 +59,11 @@ export declare class UserService {
         message: string;
         data: any;
     }>;
-    validateUser(data: UserLoginDto): Promise<User>;
+    validateUser(data: UserLoginDto): Promise<import("mongoose").Document<unknown, any, User> & Omit<User & {
+        _id: import("mongoose").Types.ObjectId;
+    }, never> & Required<{
+        _id: import("mongoose").Types.ObjectId;
+    }>>;
     createAccessToken(data: CreateTokenDto, userType?: UserType): Promise<TokenResponseDto>;
     createRefreshToken(data: CreateTokenDto): Promise<TokenResponseDto>;
     refreshAccessToken(data: RefreshAccessTokenDto): Promise<{

@@ -39,9 +39,10 @@ export class UserService {
       );
     }
     data.password = await bcrypt.hash(data.password, 10);
-    let user = await this.userModel.create(data);
+    await this.userModel.create(data);
+    let user = await this.userModel.findOne({ userName: data.userName }).exec();
     const createTokenPayload: CreateTokenDto = {
-      userId: user.id,
+      userId: user._id.toString(),
       role: (user.role as RoleType) ?? RoleType.USER,
     };
     const accessToken = await this.createAccessToken(createTokenPayload);
@@ -79,14 +80,14 @@ export class UserService {
       );
     }
     const createTokenPayload: CreateTokenDto = {
-      userId: user.id,
+      userId: user._id.toString(),
       role: (user.role as RoleType) ?? RoleType.USER,
     };
     const accessToken = await this.createAccessToken(createTokenPayload);
     const refreshToken = await this.createRefreshToken(createTokenPayload);
     // user.refreshToken = refreshToken.token;
     await this.userModel
-      .findByIdAndUpdate(user.id, { refreshToken: refreshToken.token })
+      .findByIdAndUpdate(user._id, { refreshToken: refreshToken.token })
       .exec();
     delete user.password;
     const response = {
@@ -120,7 +121,7 @@ export class UserService {
   }
 
   async validateUser(data: UserLoginDto) {
-    const user: User = await this.userModel
+    const user = await this.userModel
       .findOne({ userName: data.userName })
       .exec();
     if (user) {
@@ -169,17 +170,18 @@ export class UserService {
 
   async refreshAccessToken(data: RefreshAccessTokenDto) {
     try {
-      const isRefreshTokenExpired = !(await this.validateToken(
-        data.refreshToken,
-      ));
-      if (isRefreshTokenExpired) {
+      const tokenInfo = await this.validateToken(data.refreshToken);
+      if (!tokenInfo) {
         return SuccessResponse.from(
           null,
           StatusCode.BAD_REQUEST,
           'Refresh token has expired',
         );
       }
-      const user = await this.userModel.findById(data.userId).exec();
+      const user = await this.userModel.findById(tokenInfo.userId).exec();
+      console.log('data', data.refreshToken);
+      console.log('user', user.refreshToken);
+
       if (data.refreshToken !== user.refreshToken) {
         return SuccessResponse.from(
           null,
@@ -188,8 +190,9 @@ export class UserService {
         );
       }
       const createAccessTokenPayload: CreateTokenDto = {
-        userId: user.id,
+        userId: user._id.toString(),
         role: (user.role as RoleType) ?? RoleType.USER,
+        email: user.email ?? null,
       };
       const accessToken = await this.createAccessToken(
         createAccessTokenPayload,
@@ -206,12 +209,12 @@ export class UserService {
 
   private async validateToken(token: string) {
     try {
-      await this.jwtService.verifyAsync(token, {
+      const tokenInfo = await this.jwtService.verifyAsync(token, {
         secret: this.configService.get('JWT_SECRET'),
       });
-      return true;
+      return tokenInfo;
     } catch (e) {
-      return false;
+      return null;
     }
   }
 
@@ -230,7 +233,6 @@ export class UserService {
     // const firstName = name.substring(name.lastIndexOf(" ") +1);
     // const lastName = name.substring(name.lastIndexOf(" "), -1);
     try {
-      const existUser = await this.validateUserByEmail(user.email);
       const newUser = await this.userModel.create({
         email: user.email,
         googleId: user.googleId,
@@ -240,10 +242,12 @@ export class UserService {
         avatarUrl: user.avatarUrl,
         provider: [UserProvider.GOOGLE],
       });
+      console.log(newUser._id.toString());
       const createTokenPayload: CreateTokenDto = {
         email: newUser.email,
         type: TokenType.ACCESS_TOKEN,
         role: RoleType.USER,
+        userId: newUser._id.toString(),
       };
       const accessToken = await this.createAccessToken(
         createTokenPayload,
@@ -297,6 +301,7 @@ export class UserService {
         email: newUser.email,
         type: TokenType.ACCESS_TOKEN,
         role: RoleType.USER,
+        userId: newUser._id.toString(),
       };
       const accessToken = await this.createAccessToken(
         createTokenPayload,

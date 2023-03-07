@@ -16,10 +16,6 @@ class RefreshAccessTokenDto {
 __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
-], RefreshAccessTokenDto.prototype, "userId", void 0);
-__decorate([
-    (0, class_validator_1.IsString)(),
-    __metadata("design:type", String)
 ], RefreshAccessTokenDto.prototype, "refreshToken", void 0);
 exports.RefreshAccessTokenDto = RefreshAccessTokenDto;
 //# sourceMappingURL=refresh-access-token.dto.js.map

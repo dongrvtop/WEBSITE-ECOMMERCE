@@ -40,9 +40,10 @@ let UserService = class UserService {
             return index_1.SuccessResponse.from(null, index_1.StatusCode.BAD_REQUEST, 'Username was availble. Please choose another one.');
         }
         data.password = await bcrypt.hash(data.password, 10);
-        let user = await this.userModel.create(data);
+        await this.userModel.create(data);
+        let user = await this.userModel.findOne({ userName: data.userName }).exec();
         const createTokenPayload = {
-            userId: user.id,
+            userId: user._id.toString(),
             role: (_a = user.role) !== null && _a !== void 0 ? _a : role_type_1.RoleType.USER,
         };
         const accessToken = await this.createAccessToken(createTokenPayload);
@@ -70,13 +71,13 @@ let UserService = class UserService {
             return index_1.SuccessResponse.from(null, index_1.StatusCode.BAD_REQUEST, 'Password is incorrect. Please try again.');
         }
         const createTokenPayload = {
-            userId: user.id,
+            userId: user._id.toString(),
             role: (_a = user.role) !== null && _a !== void 0 ? _a : role_type_1.RoleType.USER,
         };
         const accessToken = await this.createAccessToken(createTokenPayload);
         const refreshToken = await this.createRefreshToken(createTokenPayload);
         await this.userModel
-            .findByIdAndUpdate(user.id, { refreshToken: refreshToken.token })
+            .findByIdAndUpdate(user._id, { refreshToken: refreshToken.token })
             .exec();
         delete user.password;
         const response = {
@@ -139,19 +140,22 @@ let UserService = class UserService {
         });
     }
     async refreshAccessToken(data) {
-        var _a;
+        var _a, _b;
         try {
-            const isRefreshTokenExpired = !(await this.validateToken(data.refreshToken));
-            if (isRefreshTokenExpired) {
+            const tokenInfo = await this.validateToken(data.refreshToken);
+            if (!tokenInfo) {
                 return index_1.SuccessResponse.from(null, index_1.StatusCode.BAD_REQUEST, 'Refresh token has expired');
             }
-            const user = await this.userModel.findById(data.userId).exec();
+            const user = await this.userModel.findById(tokenInfo.userId).exec();
+            console.log('data', data.refreshToken);
+            console.log('user', user.refreshToken);
             if (data.refreshToken !== user.refreshToken) {
                 return index_1.SuccessResponse.from(null, index_1.StatusCode.BAD_REQUEST, 'Refresh token incorrect');
             }
             const createAccessTokenPayload = {
-                userId: user.id,
+                userId: user._id.toString(),
                 role: (_a = user.role) !== null && _a !== void 0 ? _a : role_type_1.RoleType.USER,
+                email: (_b = user.email) !== null && _b !== void 0 ? _b : null,
             };
             const accessToken = await this.createAccessToken(createAccessTokenPayload);
             const response = {
@@ -166,13 +170,13 @@ let UserService = class UserService {
     }
     async validateToken(token) {
         try {
-            await this.jwtService.verifyAsync(token, {
+            const tokenInfo = await this.jwtService.verifyAsync(token, {
                 secret: this.configService.get('JWT_SECRET'),
             });
-            return true;
+            return tokenInfo;
         }
         catch (e) {
-            return false;
+            return null;
         }
     }
     async getUser(token) {
@@ -186,7 +190,6 @@ let UserService = class UserService {
     }
     async registerWithGoogle(user) {
         try {
-            const existUser = await this.validateUserByEmail(user.email);
             const newUser = await this.userModel.create({
                 email: user.email,
                 googleId: user.googleId,
@@ -196,10 +199,12 @@ let UserService = class UserService {
                 avatarUrl: user.avatarUrl,
                 provider: [user_provider_1.UserProvider.GOOGLE],
             });
+            console.log(newUser._id.toString());
             const createTokenPayload = {
                 email: newUser.email,
                 type: token_type_1.TokenType.ACCESS_TOKEN,
                 role: role_type_1.RoleType.USER,
+                userId: newUser._id.toString(),
             };
             const accessToken = await this.createAccessToken(createTokenPayload, user_type_1.UserType.WITH_GOOGLE);
             const refreshToken = await this.createRefreshToken(createTokenPayload);
@@ -246,6 +251,7 @@ let UserService = class UserService {
                 email: newUser.email,
                 type: token_type_1.TokenType.ACCESS_TOKEN,
                 role: role_type_1.RoleType.USER,
+                userId: newUser._id.toString(),
             };
             const accessToken = await this.createAccessToken(createTokenPayload, user_type_1.UserType.WITH_GOOGLE);
             const refreshToken = await this.createRefreshToken(createTokenPayload);

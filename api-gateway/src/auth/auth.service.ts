@@ -44,9 +44,8 @@ export class AuthService implements OnModuleInit, OnModuleDestroy {
     return this.authClient.send(AuthPattern.USER_LOGIN, data);
   }
 
-  async refreshAccessToken(userId: string, refreshToken: string) {
+  async refreshAccessToken(refreshToken: string) {
     return this.authClient.send(AuthPattern.REFRESH_ACCESS_TOKEN, {
-      userId,
       refreshToken,
     });
   }

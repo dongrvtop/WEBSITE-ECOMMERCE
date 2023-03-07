@@ -9,7 +9,7 @@ export declare class AuthService implements OnModuleInit, OnModuleDestroy {
     onModuleDestroy(): void;
     createUser(data: CreateUserDto): Promise<import("rxjs").Observable<any>>;
     login(data: UserLoginDto): Promise<import("rxjs").Observable<any>>;
-    refreshAccessToken(userId: string, refreshToken: string): Promise<import("rxjs").Observable<any>>;
+    refreshAccessToken(refreshToken: string): Promise<import("rxjs").Observable<any>>;
     googleLogin(): Promise<void>;
     googleAuthRedirect(user: any): Promise<import("rxjs").Observable<any>>;
     facebookAuthRedirect(user: any): Promise<import("rxjs").Observable<any>>;

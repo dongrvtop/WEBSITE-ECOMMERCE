@@ -43,9 +43,8 @@ let AuthService = class AuthService {
     async login(data) {
         return this.authClient.send(auth_microserivce_pattern_1.AuthPattern.USER_LOGIN, data);
     }
-    async refreshAccessToken(userId, refreshToken) {
+    async refreshAccessToken(refreshToken) {
         return this.authClient.send(auth_microserivce_pattern_1.AuthPattern.REFRESH_ACCESS_TOKEN, {
-            userId,
             refreshToken,
         });
     }

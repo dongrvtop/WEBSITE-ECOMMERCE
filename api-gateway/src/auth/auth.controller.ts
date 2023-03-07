@@ -31,16 +31,15 @@ export class AuthController {
 
   @Post('/login')
   login(@Body() data: UserLoginDto) {
-    console.log(`bbbbbbbbbbbbbbbbbbbb`);
     return this.authService.login(data);
   }
 
   @Post('/refresh-token')
   refreshAccessToken(
-    @Query('userId') userId: string,
+    // @Query('userId') userId: string,
     @Query('refreshToken') refreshToken: string,
   ) {
-    return this.authService.refreshAccessToken(userId, refreshToken);
+    return this.authService.refreshAccessToken(refreshToken);
   }
 
   @Get('/google')
