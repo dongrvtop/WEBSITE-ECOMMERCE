@@ -11,7 +11,7 @@ import { JwtService } from '@nestjs/jwt/dist';
 import { ConfigService } from '@nestjs/config';
 import { TokenType } from 'src/constants/token-type';
 import { RoleType } from 'src/constants/role-type';
-import { SuccessResponse, StatusCode } from '../../../common/helpers/index';
+import { SuccessResponse, StatusCode } from '../constants/index';
 import { RefreshAccessTokenDto } from './dto/refresh-access-token.dto';
 import * as express from 'express';
 import { CreateUserWithGoogle } from './dto/create-user-with-google.dto';

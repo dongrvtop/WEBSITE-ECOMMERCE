@@ -1,6 +1,6 @@
 import { Controller, ValidationPipe } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { SuccessResponse } from '../../../common/helpers';
+import { SuccessResponse } from '../constants/index';
 import { CreateUserDto } from './dto/create-user.dto';
 import { RefreshAccessTokenDto } from './dto/refresh-access-token.dto';
 import { UserLoginDto } from './dto/user-login.dto';
