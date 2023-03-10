@@ -8,6 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthModule = void 0;
 const common_1 = require("@nestjs/common");
+const config_1 = require("@nestjs/config");
 const microservices_1 = require("@nestjs/microservices");
 const index_1 = require("../common/strategy/index");
 const auth_controller_1 = require("./auth.controller");
@@ -17,24 +18,35 @@ let AuthModule = class AuthModule {
 AuthModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            microservices_1.ClientsModule.register([
+            microservices_1.ClientsModule.registerAsync([
                 {
                     name: 'AUTH_MICROSERVICE',
-                    transport: microservices_1.Transport.KAFKA,
-                    options: {
-                        client: {
-                            clientId: 'auth',
-                            brokers: ['localhost:9092'],
-                        },
-                        consumer: {
-                            groupId: 'auth-consumer',
-                        },
+                    imports: [config_1.ConfigModule],
+                    inject: [config_1.ConfigService],
+                    useFactory: (configService) => {
+                        console.log(`kafka:9092`);
+                        return {
+                            transport: microservices_1.Transport.KAFKA,
+                            options: {
+                                client: {
+                                    clientId: 'auth',
+                                    brokers: [`kafka:9092`],
+                                },
+                                consumer: {
+                                    groupId: 'auth-consumer',
+                                },
+                            },
+                        };
                     },
                 },
                 {
                     name: 'API-GATEWAY',
-                    transport: microservices_1.Transport.KAFKA,
-                    options: {},
+                    useFactory: () => {
+                        return {
+                            transport: microservices_1.Transport.KAFKA,
+                            options: {},
+                        };
+                    },
                 },
             ]),
         ],
