@@ -10,6 +10,7 @@ exports.UserModule = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const jwt_1 = require("@nestjs/jwt");
+const microservices_1 = require("@nestjs/microservices");
 const mongoose_1 = require("@nestjs/mongoose");
 const user_schema_1 = require("./schema/user.schema");
 const user_controller_1 = require("./user.controller");
@@ -19,7 +20,22 @@ let UserModule = class UserModule {
 UserModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            mongoose_1.MongooseModule.forFeature([{ name: user_schema_1.User.name, schema: user_schema_1.UserSchema }]),
+            mongoose_1.MongooseModule.forFeature([{ name: user_schema_1.User.name, schema: user_schema_1.UserSchema }], 'AUTH_MICROSERVICE_CONNECTION'),
+            microservices_1.ClientsModule.register([
+                {
+                    name: 'AUTH_MICROSERVICE',
+                    transport: microservices_1.Transport.KAFKA,
+                    options: {
+                        client: {
+                            clientId: 'auth',
+                            brokers: ['kafka:9092'],
+                        },
+                        consumer: {
+                            groupId: 'auth-consumer',
+                        },
+                    },
+                },
+            ]),
             jwt_1.JwtModule.registerAsync({
                 useFactory: (configService) => ({
                     secret: configService.get('JWT_SECRET'),

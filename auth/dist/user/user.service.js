@@ -369,7 +369,7 @@ let UserService = class UserService {
 };
 UserService = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, mongoose_1.InjectModel)(user_schema_1.User.name)),
+    __param(0, (0, mongoose_1.InjectModel)(user_schema_1.User.name, 'AUTH_MICROSERVICE_CONNECTION')),
     __metadata("design:paramtypes", [mongoose_2.Model,
         dist_1.JwtService,
         config_1.ConfigService])

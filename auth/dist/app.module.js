@@ -24,12 +24,12 @@ AppModule = __decorate([
                 imports: [config_1.ConfigModule],
                 useFactory: async (configService) => {
                     return {
-                        uri: configService.get('MONGODB_URI'),
-                        dbName: configService.get('MONGODB_DBNAME'),
+                        uri: 'mongodb+srv://wsEcommerce:password_123@ecommerce.0hvhaod.mongodb.net/?retryWrites=true&w=majority',
+                        dbName: 'website-ecommerce',
                         keepAlive: true,
                     };
                 },
-                connectionName: process.env.CONNECTION_NAME,
+                connectionName: 'AUTH_MICROSERVICE_CONNECTION',
                 inject: [config_1.ConfigService],
             }),
             config_1.ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
