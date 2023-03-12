@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -22,7 +22,9 @@ import { CreateUserWithFacebook } from './dto/create-user-with-facebook';
 @Injectable()
 export class UserService {
   constructor(
-    @InjectModel('User') private readonly userModel: Model<UserDocument>,
+    @InjectModel(User.name, 'AUTH_MICROSERVICE_CONNECTION')
+    private readonly userModel: Model<UserDocument>,
+    // @Inject('USER_MODEL') private readonly userModel: Model<UserDocument>,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
   ) {}

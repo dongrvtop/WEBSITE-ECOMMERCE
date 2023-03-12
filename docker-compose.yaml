@@ -24,6 +24,18 @@ services:
     depends_on:
       - kafdrop
       - kafka
+  auth-microservice:
+    build:
+      context: auth
+      dockerfile: Dockerfile
+    image: dongnd/auth-microservice
+    networks:
+      - web-ecommerce
+    env_file:
+      - auth/.env
+    depends_on:
+      - kafka
+      - kafdrop
   kafdrop:
     image: obsidiandynamics/kafdrop
     restart: 'no'

@@ -16,6 +16,7 @@ exports.UserService = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
+const user_schema_1 = require("./schema/user.schema");
 const bcrypt = require("bcrypt");
 const token_response_dto_1 = require("./dto/token-response.dto");
 const dist_1 = require("@nestjs/jwt/dist");
@@ -368,7 +369,7 @@ let UserService = class UserService {
 };
 UserService = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, mongoose_1.InjectModel)('User')),
+    __param(0, (0, mongoose_1.InjectModel)(user_schema_1.User.name)),
     __metadata("design:paramtypes", [mongoose_2.Model,
         dist_1.JwtService,
         config_1.ConfigService])

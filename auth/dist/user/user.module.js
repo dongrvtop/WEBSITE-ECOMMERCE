@@ -29,7 +29,9 @@ UserModule = __decorate([
             }),
         ],
         controllers: [user_controller_1.UserController],
-        providers: [user_service_1.UserService],
+        providers: [
+            user_service_1.UserService,
+        ],
         exports: [user_service_1.UserService],
     })
 ], UserModule);

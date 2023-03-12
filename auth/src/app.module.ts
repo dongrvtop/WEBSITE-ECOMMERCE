@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Transport } from '@nestjs/microservices/enums';
 import { ClientsModule } from '@nestjs/microservices/module';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -11,6 +11,22 @@ import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => {
+        return {
+          uri: 'mongodb+srv://wsEcommerce:password_123@ecommerce.0hvhaod.mongodb.net/?retryWrites=true&w=majority',
+          dbName: 'website-ecommerce',
+          // uri: configService.get<string>('MONGODB_URI'),
+          // dbName: configService.get<string>('MONGODB_DBNAME'),
+          keepAlive: true,
+        };
+      },
+      connectionName: 'AUTH_MICROSERVICE_CONNECTION',
+      // process.env.CONNECTION_NAME ?? 'AUTH_MICROSERVICE_CONNECTION',
+      inject: [ConfigService],
+    }),
+    // DatabaseModule,
     ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
     ClientsModule.register([
       {
@@ -19,7 +35,7 @@ import { UserModule } from './user/user.module';
         options: {
           client: {
             clientId: 'auth',
-            brokers: ['localhost:9092'],
+            brokers: ['kafka:9092'],
           },
           consumer: {
             groupId: 'auth-consumer',
@@ -27,7 +43,6 @@ import { UserModule } from './user/user.module';
         },
       },
     ]),
-    DatabaseModule,
     UserModule,
   ],
   controllers: [AppController],

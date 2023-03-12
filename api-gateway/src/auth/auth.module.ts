@@ -34,7 +34,6 @@ import { AuthService } from './auth.service';
         imports: [ConfigModule],
         inject: [ConfigService],
         useFactory: (configService: ConfigService) => {
-          console.log(`kafka:9092`);
           return {
             transport: Transport.KAFKA,
             options: {
