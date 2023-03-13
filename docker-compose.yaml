@@ -20,7 +20,7 @@ services:
     networks:
       - web-ecommerce
     env_file:
-      - api-gateway/.env
+      - api-gateway/.env.development
     depends_on:
       - kafdrop
       - kafka
@@ -32,7 +32,7 @@ services:
     networks:
       - web-ecommerce
     env_file:
-      - auth/.env
+      - auth/.env.development
     depends_on:
       - kafka
       - kafdrop

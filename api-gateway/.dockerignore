@@ -3,3 +3,4 @@ dist
 .dockerignore
 yarn.log
 Dockerfile
+.env
