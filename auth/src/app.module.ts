@@ -43,34 +43,34 @@ import { UserModule } from './user/user.module';
     //     },
     //   },
     // ]),
-    ClientsModule.registerAsync([
-      {
-        name: 'AUTH_MICROSERVICE',
-        imports: [ConfigModule],
-        inject: [ConfigService],
-        useFactory: (configService: ConfigService) => {
-          console.log('config', configService.get('BROKER_KAFKA'));
-          console.log('process', process.env.BROKER_KAFKA);
-          console.log('env', process.env.NODE_ENV);
-          return {
-            transport: Transport.KAFKA,
-            options: {
-              client: {
-                clientId: 'auth',
-                brokers: [
-                  // configService.get('BROKER_KAFKA') ?? process.env.BROKER_KAFKA,
-                  'kafka:9092',
-                ],
-                // ssl: true,
-              },
-              consumer: {
-                groupId: 'auth-consumer',
-              },
-            },
-          };
-        },
-      },
-    ]),
+    // ClientsModule.registerAsync([
+    //   {
+    //     name: 'AUTH_MICROSERVICE',
+    //     imports: [ConfigModule],
+    //     inject: [ConfigService],
+    //     useFactory: (configService: ConfigService) => {
+    //       console.log('config', configService.get('BROKER_KAFKA'));
+    //       console.log('process', process.env.BROKER_KAFKA);
+    //       console.log('env', process.env.NODE_ENV);
+    //       return {
+    //         transport: Transport.KAFKA,
+    //         options: {
+    //           client: {
+    //             clientId: 'auth',
+    //             brokers: [
+    //               // configService.get('BROKER_KAFKA') ?? process.env.BROKER_KAFKA,
+    //               'kafka:9092',
+    //             ],
+    //             // ssl: true,
+    //           },
+    //           consumer: {
+    //             groupId: 'auth-consumer',
+    //           },
+    //         },
+    //       };
+    //     },
+    //   },
+    // ]),
     UserModule,
   ],
   controllers: [AppController],

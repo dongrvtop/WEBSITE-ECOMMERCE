@@ -43,27 +43,27 @@ import { AuthService } from './auth.service';
               client: {
                 clientId: 'auth',
                 brokers: [
-                  // configService.get('BROKER_KAFKA') ?? process.env.BROKER_KAFKA,
-                  'kafka:9092',
+                  configService.get('BROKER_KAFKA') ?? process.env.BROKER_KAFKA,
+                  // 'kafka:9092',
                 ],
                 // ssl: true,
               },
               consumer: {
-                groupId: 'auth-consumer',
+                groupId: `gateway-consumer`,
               },
             },
           };
         },
       },
-      {
-        name: 'API-GATEWAY',
-        useFactory: () => {
-          return {
-            transport: Transport.KAFKA,
-            options: {},
-          };
-        },
-      },
+      // {
+      //   name: 'API-GATEWAY',
+      //   useFactory: () => {
+      //     return {
+      //       transport: Transport.KAFKA,
+      //       options: {},
+      //     };
+      //   },
+      // },
     ]),
   ],
   controllers: [AuthController],

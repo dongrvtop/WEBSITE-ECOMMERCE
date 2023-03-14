@@ -11,11 +11,11 @@ async function bootstrap() {
       transport: Transport.KAFKA,
       options: {
         client: {
-          // brokers: [process.env.BROKER_KAFKA ?? 'localhost:9092'],
-          brokers: ['kafka:9092'],
+          brokers: [process.env.BROKER_KAFKA ?? 'localhost:9092'],
+          // brokers: ['kafka:9092'],
         },
         consumer: {
-          groupId: 'auth-consumer',
+          groupId: `auth-consumer`,
         },
       },
     },
