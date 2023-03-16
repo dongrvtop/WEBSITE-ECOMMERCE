@@ -1,6 +1,6 @@
 import { Controller, ValidationPipe } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { SuccessResponse } from '../../../common/helpers';
+import { SuccessResponse } from '../constants/index';
 import { CreateUserDto } from './dto/create-user.dto';
 import { RefreshAccessTokenDto } from './dto/refresh-access-token.dto';
 import { UserLoginDto } from './dto/user-login.dto';
@@ -37,12 +37,12 @@ export class UserController {
 
   @MessagePattern(UserMessages.OAUTH2_GOOGLE_LOGIN)
   async googleAuthRedirect(@Payload(ValidationPipe) user) {
-    return this.userService.googleLogin(user);
+    return this.userService.loginWithGoogle(user);
   }
 
   @MessagePattern(UserMessages.OAUTH2_FACEBOOK_LOGIN)
   async facebookAuthRedirect(@Payload(ValidationPipe) user) {
-    return this.userService.facebookLogin(user);
+    return this.userService.loginWithFacebook(user);
   }
 
   @MessagePattern('get_user')

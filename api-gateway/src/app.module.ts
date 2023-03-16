@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { AppController } from './app.controller';
@@ -32,15 +33,20 @@ import { JwtStrategy } from './common/strategy/jwt.strategy';
       secret: jwtConstants.secret,
       signOptions: {
         expiresIn: '14d',
-      }
+      },
     }),
+    ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
   ],
   controllers: [AppController],
-  providers: [AppService, GoogleStrategy, FacebookStrategy, {
-    provide: APP_GUARD,
-    useClass: RolesGuard,
-  },
-  JwtStrategy,
+  providers: [
+    AppService,
+    GoogleStrategy,
+    FacebookStrategy,
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+    JwtStrategy,
   ],
 })
 export class AppModule {}

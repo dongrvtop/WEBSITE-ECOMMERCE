@@ -1,17 +1,20 @@
-.vscode
-# compiled output
+
 api-gateway/dist
-api-gateway/node_modules
 auth/dist
+api-gateway/node_modules
 auth/node_modules
+yarn.lock
+.vscode
+
+# compiled output
+/dist
+/node_modules
 /**/dist
 /**/node_modules
-/logs
-/data
-*_gcp
-*gcp.pub
 
 # Logs
+logs
+
 *.log
 npm-debug.log*
 pnpm-debug.log*
@@ -19,12 +22,7 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
-# OS
-.DS_Store
 
-# Tests
-/coverage
-/.nyc_output
 
 # IDEs and editors
 /.idea
@@ -40,7 +38,6 @@ lerna-debug.log*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
+
 !.vscode/extensions.json
 
-coverage/*
-docs/*

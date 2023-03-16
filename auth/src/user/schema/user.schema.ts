@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { classToPlain, Exclude } from 'class-transformer';
 import { HydratedDocument } from 'mongoose';
 import { RoleType } from 'src/constants/role-type';
+import { UserProvider } from '../enum/user-provider';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -10,26 +10,50 @@ export class User {
   @Prop({ auto: true })
   id: string;
 
-  @Prop({ required: true, unique: true })
+  @Prop({ required: false, unique: true })
   userName: string;
 
-  @Prop({ required: true, minlength: 8 })
+  @Prop({ required: false, unique: true })
+  email: string;
+
+  @Prop({ required: false, unique: true })
+  googleId: string;
+
+  @Prop({ required: false, unique: true })
+  facebookId: string;
+
+  @Prop({ required: false, minlength: 8 })
   password: string;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   firstName: string;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   lastName: string;
 
   @Prop({ required: false })
   phoneNumber: string;
+
+  @Prop({ required: false })
+  gender: string;
+
+  @Prop()
+  facebookProfileUrl: string;
+
+  @Prop()
+  avatarUrl: string;
+
+  @Prop()
+  birthday: Date;
 
   @Prop()
   refreshToken: string;
 
   @Prop({ default: RoleType.USER })
   role: string;
+
+  @Prop({ default: [UserProvider.NORMAL] })
+  provider: string[];
 }
 
 // export const UserSchema = SchemaFactory.createForClass(User);
