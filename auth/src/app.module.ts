@@ -28,37 +28,19 @@ import { UserModule } from './user/user.module';
     }),
     // DatabaseModule,
     ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
-    // ClientsModule.register([
-    //   {
-    //     name: 'AUTH_MICROSERVICE',
-    //     transport: Transport.KAFKA,
-    //     options: {
-    //       client: {
-    //         clientId: 'auth',
-    //         brokers: ['kafka:9092'],
-    //       },
-    //       consumer: {
-    //         groupId: 'auth-consumer',
-    //       },
-    //     },
-    //   },
-    // ]),
     // ClientsModule.registerAsync([
     //   {
     //     name: 'AUTH_MICROSERVICE',
     //     imports: [ConfigModule],
     //     inject: [ConfigService],
     //     useFactory: (configService: ConfigService) => {
-    //       console.log('config', configService.get('BROKER_KAFKA'));
-    //       console.log('process', process.env.BROKER_KAFKA);
-    //       console.log('env', process.env.NODE_ENV);
     //       return {
     //         transport: Transport.KAFKA,
     //         options: {
     //           client: {
     //             clientId: 'auth',
     //             brokers: [
-    //               // configService.get('BROKER_KAFKA') ?? process.env.BROKER_KAFKA,
+    //               // configService.get('KAFKA_BROKER') ?? process.env.KAFKA_BROKER,
     //               'kafka:9092',
     //             ],
     //             // ssl: true,

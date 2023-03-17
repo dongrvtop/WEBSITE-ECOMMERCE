@@ -34,16 +34,13 @@ import { AuthService } from './auth.service';
         imports: [ConfigModule],
         inject: [ConfigService],
         useFactory: (configService: ConfigService) => {
-          console.log('config', configService.get('BROKER_KAFKA'));
-          console.log('process', process.env.BROKER_KAFKA);
-          console.log('env', process.env.NODE_ENV);
           return {
             transport: Transport.KAFKA,
             options: {
               client: {
                 clientId: 'auth',
                 brokers: [
-                  configService.get('BROKER_KAFKA') ?? process.env.BROKER_KAFKA,
+                  configService.get('KAFKA_BROKER') ?? process.env.KAFKA_BROKER,
                   // 'kafka:9092',
                 ],
                 // ssl: true,
