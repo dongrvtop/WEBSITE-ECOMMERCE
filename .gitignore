@@ -1,8 +1,10 @@
 
 api-gateway/dist
-auth/dist
 api-gateway/node_modules
+auth/dist
 auth/node_modules
+shop/dist
+shop/node_modules
 yarn.lock
 .vscode
 

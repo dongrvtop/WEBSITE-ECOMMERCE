@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -9,6 +10,7 @@ import { jwtConstants } from './common/constants/jwt.constants';
 import { RolesGuard } from './common/guards';
 import { GoogleStrategy, FacebookStrategy } from './common/strategy/index';
 import { JwtStrategy } from './common/strategy/jwt.strategy';
+import { ShopController } from './shop/shop.controller';
 
 @Module({
   imports: [
@@ -28,6 +30,29 @@ import { JwtStrategy } from './common/strategy/jwt.strategy';
     //     },
     //   },
     // ]),
+    ClientsModule.registerAsync([
+      {
+        name: 'KAFKA_SERVICE',
+        imports: [ConfigModule],
+        inject: [ConfigService],
+        useFactory: (configService: ConfigService) => {
+          return {
+            transport: Transport.KAFKA,
+            options: {
+              client: {
+                clientId: 'client',
+                brokers: [
+                  configService.get('KAFKA_BROKER') ?? process.env.KAFKA_BROKER,
+                ],
+              },
+              consumer: {
+                groupId: `client-consumer`,
+              },
+            },
+          };
+        },
+      },
+    ]),
     AuthModule,
     JwtModule.register({
       secret: jwtConstants.secret,
@@ -37,7 +62,7 @@ import { JwtStrategy } from './common/strategy/jwt.strategy';
     }),
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
   ],
-  controllers: [AppController],
+  controllers: [AppController, ShopController],
   providers: [
     AppService,
     GoogleStrategy,

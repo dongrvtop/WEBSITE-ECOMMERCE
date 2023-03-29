@@ -6,36 +6,34 @@ networks:
     driver: bridge
 
 services:
-  api-gateway:
-    build:
-      context: api-gateway
-      dockerfile: Dockerfile
-    image: dongnd/api-gateway
-    # volumes:
-    #   - .:/usr/src/app
-    ports:
-      - '8000:3000'
-    # expose:
-    #   - '8000'
-    networks:
-      - web-ecommerce
-    env_file:
-      - api-gateway/.env.development
-    depends_on:
-      - kafdrop
-      - kafka
-  auth-microservice:
-    build:
-      context: auth
-      dockerfile: Dockerfile
-    image: dongnd/auth-microservice
-    networks:
-      - web-ecommerce
-    env_file:
-      - auth/.env.development
-    depends_on:
-      - kafka
-      - kafdrop
+  # api-gateway:
+  #   build:
+  #     context: api-gateway
+  #     dockerfile: Dockerfile
+  #   image: dongnd/api-gateway
+  #   # volumes:
+  #   #   - .:/usr/src/app
+  #   ports:
+  #     - '8000:3000'
+  #   # expose:
+  #   #   - '8000'
+  #   networks:
+  #     - web-ecommerce
+  #   env_file:
+  #     - api-gateway/.env.development
+  #   depends_on:
+  #     - kafka
+  # auth-microservice:
+  #   build:
+  #     context: auth
+  #     dockerfile: Dockerfile
+  #   image: dongnd/auth-microservice
+  #   networks:
+  #     - web-ecommerce
+  #   env_file:
+  #     - auth/.env.development
+  #   depends_on:
+  #     - kafka
   kafdrop:
     image: obsidiandynamics/kafdrop
     restart: 'no'
@@ -67,7 +65,5 @@ services:
       KAFKA_RESTART_ATTEMPTS: '10'
       KAFKA_RESTART_DELAY: '5'
       ZOOKEEPER_AUTOPURGE_PURGE_INTERVAL: '0'
-    # depends_on:
-    #   - api-gateway
     networks:
       - web-ecommerce
