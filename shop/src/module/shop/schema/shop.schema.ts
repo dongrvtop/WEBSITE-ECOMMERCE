@@ -8,7 +8,7 @@ export class Shop {
   @Prop({ auto: true })
   id: string;
 
-  @Prop()
+  @Prop({ unique: true })
   userId: string;
 
   @Prop()
