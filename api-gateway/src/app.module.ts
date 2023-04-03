@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { jwtConstants } from './common/constants/jwt.constants';
+import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
 import { RolesGuard } from './common/guards';
 import { GoogleStrategy, FacebookStrategy } from './common/strategy/index';
 import { JwtStrategy } from './common/strategy/jwt.strategy';
@@ -70,6 +71,10 @@ import { ShopController } from './shop/shop.controller';
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: GlobalExceptionFilter,
     },
     JwtStrategy,
   ],

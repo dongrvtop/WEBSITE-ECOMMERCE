@@ -10,9 +10,8 @@ import { databaseProviders } from './database.provider';
       useFactory: async (configService: ConfigService) => {
         return {
           uri:
-            // configService.get<string>('MONGODB_URL') ??
-            // 'mongodb://root:password@mongo:27017/',
-            'mongodb://root:password@localhost:27017/Shop_Service_DB?directConnection=true',
+            configService.get<string>('MONGODB_URL') ??
+            'mongodb://root:pwroot@localhost:27017/',
           dbName:
             configService.get<string>('MONGODB_DBNAME') ?? 'Shop_Service_DB',
           keepAlive: true,
