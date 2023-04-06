@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './module/database/database.module';
 import { databaseProviders } from './module/database/database.provider';
+import { ProductModule } from './module/product/product.module';
 import { ShopModule } from './module/shop/shop.module';
 
 @Module({
@@ -12,6 +13,7 @@ import { ShopModule } from './module/shop/shop.module';
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '/.env' }),
     DatabaseModule,
     ShopModule,
+    ProductModule,
   ],
   controllers: [AppController],
   providers: [
