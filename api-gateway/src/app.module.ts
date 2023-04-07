@@ -11,6 +11,7 @@ import { GlobalExceptionFilter } from './common/filters/global-exception.filter'
 import { RolesGuard } from './common/guards';
 import { GoogleStrategy, FacebookStrategy } from './common/strategy/index';
 import { JwtStrategy } from './common/strategy/jwt.strategy';
+import { ProductController } from './shop/product.controller';
 import { ShopController } from './shop/shop.controller';
 
 @Module({
@@ -63,7 +64,7 @@ import { ShopController } from './shop/shop.controller';
     }),
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
   ],
-  controllers: [AppController, ShopController],
+  controllers: [AppController, ShopController, ProductController],
   providers: [
     AppService,
     GoogleStrategy,

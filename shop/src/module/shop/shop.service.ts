@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotAcceptableException,
 } from '@nestjs/common';
@@ -18,12 +19,16 @@ export class ShopService {
     private readonly shopModel: Model<ShopDocument>,
   ) {}
   async addShop(data: CreateShopDto) {
-    const checkAvailable = await this.checkExistShopByUserId(data.userId);
-    if (checkAvailable) {
-      throw new RpcException(new NotAcceptableException('You have had shop'));
+    try {
+      const checkAvailable = await this.checkExistShopByUserId(data.userId);
+      if (checkAvailable) {
+        throw new RpcException(new NotAcceptableException('You have had shop'));
+      }
+      const shop = await this.shopModel.create(data);
+      return SuccessResponse.from(shop);
+    } catch (error) {
+      throw new RpcException(new ForbiddenException(error.message));
     }
-    const shop = await this.shopModel.create(data);
-    return SuccessResponse.from(shop);
   }
 
   async editShop(data: EditShopDto) {

@@ -1,27 +1,14 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Inject,
-  OnModuleDestroy,
-  OnModuleInit,
-  Param,
-  Post,
-  Put,
-  Type,
-} from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
 import { ClientKafka, RpcException } from '@nestjs/microservices';
 import { ApiTags } from '@nestjs/swagger';
 import { catchError, throwError } from 'rxjs';
-import { CreateShopDto } from './dto/create-shop.dto';
-import { EditShopDto } from './dto/edit-shop.dto';
+import { CreateProductDto } from './dto/create-product.dto';
 import { ShopPattern } from './enum/shop-microservice.pattern';
 
-const shopPatternList = [ShopPattern.CREATE_SHOP, ShopPattern.EDIT_SHOP];
-
-@Controller('shop')
+const shopPatternList = [ShopPattern.ADD_PRODUCT, ShopPattern.ALL_PRODUCT];
+@Controller('product')
 @ApiTags('shop-microservice')
-export class ShopController implements OnModuleInit, OnModuleDestroy {
+export class ProductController {
   constructor(
     @Inject('KAFKA_SERVICE')
     private readonly client: ClientKafka,
@@ -36,17 +23,17 @@ export class ShopController implements OnModuleInit, OnModuleDestroy {
   onModuleDestroy() {
     this.client.close();
   }
-  @Post()
-  addShop(@Body() data: CreateShopDto) {
+  @Post('')
+  addShop(@Body() data: CreateProductDto) {
     return this.client
-      .send(ShopPattern.CREATE_SHOP, data)
+      .send(ShopPattern.ADD_PRODUCT, data)
       .pipe(catchError((error) => throwError(() => new RpcException(error))));
   }
 
-  @Put('/:id')
-  editShop(@Param('id') id: string, @Body() data: EditShopDto) {
+  @Get(':shopId')
+  getAllProductByShopId(@Param('shopId') id: string) {
     return this.client
-      .send(ShopPattern.EDIT_SHOP, { id, ...data })
+      .send(ShopPattern.ALL_PRODUCT, id)
       .pipe(catchError((error) => throwError(() => new RpcException(error))));
   }
 }
