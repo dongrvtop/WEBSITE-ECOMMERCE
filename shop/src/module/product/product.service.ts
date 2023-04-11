@@ -12,16 +12,17 @@ import {
   ProductDetail,
   ProductDetailDocument,
 } from './schema/product-detail.schema';
-import { Product, ProductDocument } from './schema/product.schema';
+import { ProductDocument } from './schema/product.schema';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class ProductService {
   constructor(
-    @InjectModel(Product.name)
+    @InjectModel('Product')
     private readonly productModel: Model<ProductDocument>,
     @InjectModel(ProductDetail.name)
     private readonly productDetailModel: Model<ProductDetailDocument>,
-    @InjectModel(ProductColor.name)
+    @InjectModel('ProductColor')
     private readonly productColorModel: Model<ProductColorDocument>,
   ) {}
 
@@ -43,9 +44,11 @@ export class ProductService {
       }
       console.log(`CHECK: ${product.id}`);
 
-      const response = await this.productModel.find({
-        _id: product._id,
-      });
+      const response = await this.productModel
+        .find({
+          _id: product._id,
+        })
+        .populate('colors', 'name image');
       return SuccessResponse.from(response);
     } catch (error) {
       throw new RpcException(new ForbiddenException(error.message));
@@ -54,10 +57,29 @@ export class ProductService {
 
   async getAllProductByShopId(id: string) {
     try {
-      const products = await this.productModel.find({ shopId: id }, null, {
-        populate: ['shopId', 'color'],
-      });
-
+      const products = await this.productModel.aggregate([
+        {
+          $match: {
+            shopId: new ObjectId(id),
+          },
+        },
+        {
+          $lookup: {
+            from: 'productcolors',
+            localField: '_id',
+            foreignField: 'productId',
+            as: 'color',
+          },
+        },
+        {
+          $lookup: {
+            from: 'shops',
+            localField: 'shopId',
+            foreignField: '_id',
+            as: 'shop',
+          },
+        },
+      ]);
       return SuccessResponse.from(products);
     } catch (error) {
       throw new RpcException(new ForbiddenException(error.message));

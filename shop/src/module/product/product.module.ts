@@ -16,9 +16,9 @@ import { Product, ProductSchema } from './schema/product.schema';
   imports: [
     MongooseModule.forFeature(
       [
-        { name: Product.name, schema: ProductSchema },
+        { name: 'Product', schema: ProductSchema },
         { name: ProductDetail.name, schema: ProductDetailSchema },
-        { name: ProductColor.name, schema: ProductColorSchema },
+        { name: 'ProductColor', schema: ProductColorSchema },
       ],
       process.env.CONNECTION_NAME,
     ),
