@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -14,6 +18,8 @@ import {
 } from './schema/product-detail.schema';
 import { ProductDocument } from './schema/product.schema';
 import { ObjectId } from 'mongodb';
+import { UpdateProductDto } from './dto/update-product.dto';
+import { CreateProductDetailDto } from './dto/create-product-detail.dto';
 
 @Injectable()
 export class ProductService {
@@ -49,6 +55,54 @@ export class ProductService {
           _id: product._id,
         })
         .populate('colors', 'name image');
+      return SuccessResponse.from(response);
+    } catch (error) {
+      throw new RpcException(new ForbiddenException(error.message));
+    }
+  }
+
+  async updateProductById(data: UpdateProductDto) {
+    try {
+      const product = await this.productModel.findOne({ _id: data.id });
+      if (!product) {
+        throw new RpcException(
+          new BadRequestException('This product does not exist or was deleted'),
+        );
+      }
+      await product.updateOne(data);
+      return await this.productModel.findOne({ _id: data.id });
+    } catch (error) {
+      throw new RpcException(new ForbiddenException(error.message));
+    }
+  }
+
+  async deleteProductById(id: string) {
+    try {
+      const product = await this.productModel.findOne({ _id: id });
+      if (!product) {
+        throw new RpcException(
+          new BadRequestException('This product does not exist or was deleted'),
+        );
+      }
+      await this.productDetailModel.deleteMany({ productId: id });
+      await this.productColorModel.deleteMany({ productId: id });
+      const response = await this.productModel.findOneAndDelete({ _id: id });
+      return SuccessResponse.from(response);
+    } catch (error) {
+      throw new RpcException(new ForbiddenException(error.message));
+    }
+  }
+
+  async addProductDetail(data: CreateProductDetailDto[]) {
+    try {
+      if (data.length) {
+        data.forEach(async (item) => {
+          await this.productDetailModel.create(item);
+        });
+      }
+      const response = await this.productDetailModel.find({
+        productId: data[0].productId,
+      });
       return SuccessResponse.from(response);
     } catch (error) {
       throw new RpcException(new ForbiddenException(error.message));

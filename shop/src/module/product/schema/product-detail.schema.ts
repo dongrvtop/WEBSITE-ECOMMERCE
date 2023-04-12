@@ -11,9 +11,9 @@ export class ProductDetail {
   @Transform(({ value }) => value.toString())
   _id: ObjectId;
 
-  // @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Product' })
-  // @Type(() => Product)
-  // product: Product;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Product' })
+  @Transform(({ value }) => value.toString())
+  productId: ObjectId;
 
   @Prop()
   colorId: string;
