@@ -7,6 +7,7 @@ import { DatabaseModule } from './module/database/database.module';
 import { databaseProviders } from './module/database/database.provider';
 import { ProductModule } from './module/product/product.module';
 import { ShopModule } from './module/shop/shop.module';
+import { ProductSizeModule } from './module/product-size/product-size.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ShopModule } from './module/shop/shop.module';
     DatabaseModule,
     ShopModule,
     ProductModule,
+    ProductSizeModule,
   ],
   controllers: [AppController],
   providers: [

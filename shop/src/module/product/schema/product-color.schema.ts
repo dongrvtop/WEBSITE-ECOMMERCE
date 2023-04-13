@@ -17,12 +17,16 @@ export class ProductColor {
   // @Type(() => Product)
   // @Prop()
   productId: ObjectId;
-
   @Prop()
   name: string;
 
   @Prop()
   image: string;
+  @Prop()
+  createdAt: Date;
+
+  @Prop()
+  updatedAt: Date;
 }
 
 export const ProductColorSchema = SchemaFactory.createForClass(ProductColor);

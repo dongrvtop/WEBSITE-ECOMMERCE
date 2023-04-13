@@ -15,10 +15,10 @@ export class ProductDetail {
   @Transform(({ value }) => value.toString())
   productId: ObjectId;
 
-  @Prop()
+  @Prop({unique: true, isRequired: false})
   colorId: string;
 
-  @Prop()
+  @Prop({unique: true, isRequired: false})
   sizeId: string;
 
   @Prop()

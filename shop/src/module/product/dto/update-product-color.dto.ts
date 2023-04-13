@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
 
-export class CreateProductColorDto {
+export class UpdateProductColorDto {
   @ApiProperty()
   @IsString()
-  productId: string;
+  id: string;
 
   @ApiProperty()
   @IsString()
