@@ -11,4 +11,7 @@ export enum ShopPattern {
   UPDATE_PRODUCT_COLOR = 'update_product_color',
   DELETE_PRODUCT_COLOR = 'delete_product_color',
   ALL_PRODUCT = 'all_product',
+  CREATE_PRODUCT_SIZE = 'create_product_size',
+  UPDATE_PRODUCT_SIZE = 'update_product_size',
+  DELETE_PRODUCT_SIZE = 'delete_product_size',
 }
